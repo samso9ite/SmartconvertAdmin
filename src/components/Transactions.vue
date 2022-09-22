@@ -26,6 +26,7 @@
                         <td class="text-success"  v-else-if="transaction.transaction_status == '2'">PAID</td>
                         <td class="text-danger"  v-else-if="transaction.transaction_status == '4'">FAILED</td>
                         <td class="text-warning"  v-else-if="transaction.transaction_status == '5'">ON-HOLD</td>
+                        <td class="text-warning"  v-else-if="transaction.transaction_status == '6'">AWAITING CONFIRMATION</td>
                         <td>
                             <span class="badge badge-danger">{{transaction.trade_type}}</span>
                         </td>

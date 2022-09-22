@@ -4,7 +4,7 @@
         <div class="content-body">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xl-3 col-lg-4 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <div class="card balance-widget">
                             <div class="card-header border-0 py-0">
                                 <h4 class="card-title">Welcome Back, Admin </h4>
@@ -20,7 +20,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-lg-3 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="widget-stat">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -55,7 +55,7 @@
                             
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-xxl-4">
+                    <div class="col-xl-3 col-lg-3 col-xxl-3">
                         <!-- <div class="col-xl-12 col-lg-6 col-xxl-6"> -->
                             <div class="widget-card">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -158,6 +158,60 @@ export default defineComponent({
                 alert("There's an error, plese contact admin")
             }
         }
+        
+        /• This updates the status of transactions based on the coinbase status */
+        const coinbaseTransactionStatusUpdate = async () =>{
+            await getTransactions()
+            const all_transactions:any = transactions.value
+            let pending_transactions =  all_transactions.filter((transaction:any) => transaction.transaction_status == '1' && transaction.trade_type == 'SELL')
+            let awaiting_confirmation = all_transactions.filter((transaction:any) => transaction.transaction_status == '6' && transaction.trade_type == 'SELL')
+            let uncomplete_transactions = pending_transactions.concat(awaiting_confirmation)
+            
+            if (uncomplete_transactions){
+                
+                for (let i =0; i < uncomplete_transactions.length; i++){
+                        let transactionCoinbase = uncomplete_transactions[i];
+                        let transaction_reference:string = transactionCoinbase.transaction_reference
+                        let coin_sell_rate = transactionCoinbase.coin.sell_rate
+                        let transaction_status:any
+                        let coinbase_transaction_status:any
+                        let coinbase_transaction_amount:any
+                        let coinbase_transaction_dollar_amount:any
+                        let coinbase_transaction_currency:any
+                        let coinbase_transaction_hash:any
+                        await Api.axios_instance.get(Api.baseUrl+'api/v1/get-coinbase-transaction-detail/'+transactionCoinbase.wallet_address_id+'/'+transactionCoinbase.address_account_id)
+                            .then(
+                                response => {
+                                    if(response.data.data.length){
+                                        coinbase_transaction_status = response.data.data[0].status
+                                        coinbase_transaction_amount = response.data.data[0].amount.amount
+                                        coinbase_transaction_currency = response.data.data[0].amount.currency
+                                        coinbase_transaction_hash = response.data.data[0].network.hash
+                                        coinbase_transaction_dollar_amount = response.data.data[0].native_amount.amount
+                                    }
+                                   
+                                }   
+                            )
+                            if (coinbase_transaction_status === 'completed'){
+                                transaction_status =  "3"
+                            }else if(coinbase_transaction_status === 'pending'){
+                                transaction_status = "6"
+                            }
+                            
+                            /* Recalculate Naira & Dollar Amount based on Coin Amount Received */
+                            let recalculated_naira_amount = coin_sell_rate * coinbase_transaction_dollar_amount
+                            let formData= {
+                                coin_amount: coinbase_transaction_amount,
+                                hash_key: coinbase_transaction_hash,
+                                transaction_status: transaction_status,
+                                dollar_amount: coinbase_transaction_dollar_amount,
+                                naira_amount: recalculated_naira_amount
+                            }
+                            
+                            await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+transaction_reference, formData)
+                    }
+            }
+        }
 
         /* This function gets all users from the database */
         const getAllUsers = async () => {
@@ -183,16 +237,17 @@ export default defineComponent({
         })
 
         filteredTrades = computed(() => {
-            return transactions.value.filter((transaction:any) => transaction.transaction_status.includes(selected.value))
+            return transactions.value.filter((transaction:any) => transaction.transaction_status.includes(selected.value)).reverse()
         })
 
         onMounted(() => {
             getTransactions()
             getAllUsers()
+            coinbaseTransactionStatusUpdate()
         })
 
         return {getTransactions, transactions, getAllUsers, users, total_transacted, selected, filteredTrades,
-                pendingTransactions, paidTransactions, handleClick}
+                pendingTransactions, paidTransactions, handleClick, coinbaseTransactionStatusUpdate}
     },
 })
 </script>

@@ -119,7 +119,7 @@ export default defineComponent({
             dollar_amount: 0 as number,
             transaction_status:'' as string,
             hash_key: '' as string,
-            comment: '' as string,
+            comment: 'No Comment' as string,
             member_id: '' as string,
             trade_type: '' as string
         })
@@ -159,14 +159,14 @@ export default defineComponent({
         const updateTransaction = async () => {
            try {
                 const formData = {
-                    coin_address:tradeDetails.value.coin_address,
                     coin_amount:tradeDetails.value.coin_amount,
                     naira_amount:tradeDetails.value.naira_amount,
                     dollar_amount: tradeDetails.value.dollar_amount,
-                    hash_key: tradeDetails.value.hash_key,
                     comment: tradeDetails.value.comment,
                     transaction_status: tradeDetails.value.transaction_status
                 }
+                console.log(formData);
+                
                await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, formData)
                .then(res => {
                     Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)

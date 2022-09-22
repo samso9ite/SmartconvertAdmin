@@ -15,7 +15,9 @@ interface Transaction {
     trade_type: string,
     transaction_reference: string,
     hash_key: string,
-    transaction_status: string
+    transaction_status: string,
+    address_account_id: string,
+    wallet_address_id: string
 }
 
 export default Transaction
