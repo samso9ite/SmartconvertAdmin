@@ -8,6 +8,7 @@ import Testimonials from '../views/Testimonials.vue'
 import Users from '../views/Users.vue'
 import Signin from '../views/Signin.vue'
 import TradeUpdate from '../views/TradeUpdate.vue'
+import VerifyUser from '../views/VerifyUser.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -55,6 +56,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/update-trade/:reference',
     name: 'UpdateTrade',
     component: TradeUpdate,
+    props: true
+  },
+  {
+    path: '/verify-user/:reference',
+    name: 'VerifyUser',
+    component: VerifyUser,
     props: true
   },
 

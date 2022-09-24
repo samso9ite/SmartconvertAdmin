@@ -72,7 +72,7 @@ export default defineComponent({
     }
 
     onMounted (() => {
-        getCoins(   )
+        getCoins()
     })
     return {getCoins, rates}
     },
