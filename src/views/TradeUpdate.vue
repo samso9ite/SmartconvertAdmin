@@ -38,9 +38,23 @@
                                                 <label class="me-sm-2" v-else>Coin Amount</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.coin_amount" />
                                             </div>
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
+                                                <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Amount Received </label>
+                                                <label class="me-sm-2" v-else>Coin Amount Received</label>
+                                                <input type="text" class="form-control" v-model="tradeDetails.amount_received" />
+                                            </div>
                                              <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Naira Amount</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.naira_amount" />
+                                            </div>
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
+                                                <label class="me-sm-2">Naira Amount Received</label>
+                                                <input type="text" class="form-control" v-model="tradeDetails.paid_naira_amount" />
+                                            </div>
+                                            
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
+                                                <label class="me-sm-2">Dollar Amount Received</label>
+                                                <input type="text" class="form-control" v-model="tradeDetails.paid_dollar_amount" />
                                             </div>
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Dollar Amount</label>
@@ -121,7 +135,10 @@ export default defineComponent({
             hash_key: '' as string,
             comment: 'No Comment' as string,
             member_id: '' as string,
-            trade_type: '' as string
+            trade_type: '' as string,
+            amount_received: 0 as number,
+            paid_dollar_amount: 0 as number,
+            paid_naira_amount: 0 as number
         })
 
         const bankDetails = ref({
@@ -134,7 +151,6 @@ export default defineComponent({
             const reference = route.params.reference
             const transactions = ref<any>(store.state.all_transactions)
             const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference)
-            console.log(selected);
             
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
@@ -152,30 +168,55 @@ export default defineComponent({
                 bankDetails.value.bank_name = selected[0].bank.bank_name
                 bankDetails.value.account_name = selected[0].bank.account_name
                 bankDetails.value.account_number = selected[0].bank.account_number
+                tradeDetails.value.amount_received = selected[0].amount_received
+                tradeDetails.value.paid_dollar_amount = selected[0].paid_dollar_amount
+                tradeDetails.value.paid_naira_amount = selected[0].paid_naira_amount
             }
         }
 
         /* Update Trade Details */
         const updateTransaction = async () => {
-           try {
-                const formData = {
-                    coin_amount:tradeDetails.value.coin_amount,
-                    naira_amount:tradeDetails.value.naira_amount,
-                    dollar_amount: tradeDetails.value.dollar_amount,
-                    comment: tradeDetails.value.comment,
-                    transaction_status: tradeDetails.value.transaction_status
+            const sellFormData = {
+                coin_amount:tradeDetails.value.coin_amount,
+                naira_amount:tradeDetails.value.naira_amount,
+                dollar_amount: tradeDetails.value.dollar_amount,
+                comment: tradeDetails.value.comment,
+                transaction_status: tradeDetails.value.transaction_status,
+                paid_dollar_amount: tradeDetails.value.paid_dollar_amount,
+                paid_naira_amount: tradeDetails.value.paid_naira_amount,
+                amount_received: tradeDetails.value.amount_received
+            }
+            const buyFormData = {
+                coin_amount:tradeDetails.value.coin_amount,
+                naira_amount:tradeDetails.value.naira_amount,
+                dollar_amount: tradeDetails.value.dollar_amount,
+                comment: tradeDetails.value.comment,
+                transaction_status: tradeDetails.value.transaction_status,
+            }
+            console.log(sellFormData, buyFormData);
+            
+            try {
+                if(tradeDetails.value.trade_type == 'SELL'){
+                    await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, sellFormData)
+                    .then(res => {
+                        Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
+                        router.push({path:'/'})
+                        alert('Transaction Updated Successfully')
+                    })
+                } else {
+                    await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, buyFormData)
+                    .then(res => {
+                        Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
+                        router.push({path:'/'})
+                        alert('Transaction Updated Successfully')
+                    })
                 }
-                console.log(formData);
+              
+            }catch(e){
+                console.log(e);
                 
-               await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, formData)
-               .then(res => {
-                    Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
-                    router.push({path:'/'})
-                    alert('Trnsaction Update Successful')
-                })
-           }catch(e){
-            alert('An error occured please contact admin') 
-           }
+                alert('An error occured please contact admin') 
+            } 
         }
 
         onMounted(() => {

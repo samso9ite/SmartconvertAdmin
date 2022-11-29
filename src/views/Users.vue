@@ -23,12 +23,9 @@
                                            >Unverified Users
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab"  @click="handleClick('3')"
-                                       >Awaiting Confirmation</a>
-                                    </li>
-                                    
+                                    <li class="nav-item"> <a class="nav-link" data-toggle="tab"  @click="handleClick('3')"> Awaiting Confirmation </a> </li>
                                 </ul>
-                        </div>
+                            </div>
                         <div class="card-body pt-0">
                             <div class="transaction-table">
                                 <div class="table-responsive">
@@ -36,10 +33,10 @@
                                     
                                             <tbody>
                                                 <!-- <perfect-scrollbar> -->
-                                                <div  v-if="selected === '3' || selected ==='2'">
-                                                    <div v-for="user in filteredUsers" :key="user">
-                                                        <router-link :to="{name:'VerifyUser', params:{reference:user.id}}">
-                                                            <tr>
+                                                <div class="col-lg-12" v-if="selected === '3' || selected ==='2'" style="width: 100% !important">
+                                                    <span v-for="user in filteredUsers" :key="user">
+                                                        <tr v-for="user in filteredUsers" :key="user">
+                                                            <!-- <router-link :to="{name:'VerifyUser', params:{reference:user.id}}"> -->
                                                             <td>
                                                                 {{user.user.member_id}}
                                                             </td>
@@ -54,9 +51,11 @@
                                                             </td>
                                                             <td >{{user.address}}</td>
                                                             <td>{{user.user.total_transactions}} Transactions</td>
+                                                            <td>
+                                                                <router-link :to="{name:'VerifyUser', params:{reference:user.id}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
+                                                            </td>
                                                         </tr>
-                                                        </router-link>
-                                                    </div>
+                                                    </span>
                                                 </div>
 
                                                 <div v-else>

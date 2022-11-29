@@ -43,10 +43,10 @@
                             {{transaction.buy_payment_mode}}
                         </td>
                         <td>
-                        <router-link :to="{name:'UpdateTrade', params:{reference:transaction.transaction_reference}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
-                </td>
+                            <router-link :to="{name:'UpdateTrade', params:{reference:transaction.transaction_reference}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
+                        </td>
 
-            </tr>
+                    </tr>
             
                 </tbody>
             </table>
