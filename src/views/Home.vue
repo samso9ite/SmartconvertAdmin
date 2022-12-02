@@ -238,16 +238,16 @@ export default defineComponent({
                         let coin_sell_rate = myceliumTransactions.coin.sell_rate
                         let transaction_status:any
                         let mycelium_transaction_status:any
-                        // let mycelium_transaction_amount:any
                         let mycelium_payment_id:any = myceliumTransactions.wallet_address_id
                         let mycelium_transaction_dollar_amount:any
                         let coinbase_transaction_currency:any
                         let mycelium_transaction_hash:any  
+                        console.log(mycelium_payment_id);
+                        
                        
                         / * Get transaction status using mycelium API * /
                         Api.axios_instance.get('https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders/'+mycelium_payment_id)
                         .then(response => {
-                                    console.log(response);
                                     mycelium_transaction_status = response.data.status
                                     
                                     mycelium_transaction_amount.value = parseFloat(response.data.amount_paid_in_btc)
@@ -271,7 +271,6 @@ export default defineComponent({
                                     transaction_status: transaction_status,
                                     paid_dollar_amount: paid_dollar_amount,
                                     paid_naira_amount: recalculated_naira_amount,
-
                                 }
                                 await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+transaction_reference, formData)
                         
@@ -304,6 +303,7 @@ export default defineComponent({
 
         filteredTrades = computed(() => {
             return transactions.value.filter((transaction:any) => transaction.transaction_status.includes(selected.value)).reverse()
+            
         })
 
         onMounted(() => {
