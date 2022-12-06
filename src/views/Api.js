@@ -17,7 +17,7 @@ let access = await sessionStorage.getItem('access')
   access ? config.headers.Authorization = `JWT ${access}` : null;
   return config;
 });
-const baseUrl = 'http://localhost:8000/'
+const baseUrl = 'https://api.smartconvert.ng/'
 export default { 
   axios_instance,
   baseUrl,
