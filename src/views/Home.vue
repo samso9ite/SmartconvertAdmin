@@ -231,51 +231,51 @@ export default defineComponent({
             let awaiting_confirmation = all_transactions.filter((transaction:any) => transaction.transaction_status == '6' && transaction.trade_type == 'SELL' && transaction.coin.coin_name == 'Bitcoin')
             let uncomplete_transactions = pending_transactions.concat(awaiting_confirmation)
             
-            if (uncomplete_transactions.length){
-                for (let i =0; i < uncomplete_transactions.length; i++){
-                        let myceliumTransactions = uncomplete_transactions[i];
-                        let transaction_reference:string = myceliumTransactions.transaction_reference
-                        let coin_sell_rate = myceliumTransactions.coin.sell_rate
-                        let transaction_status:any
-                        let mycelium_transaction_status:any
-                        let mycelium_payment_id:any = myceliumTransactions.wallet_address_id
-                        let mycelium_transaction_dollar_amount:any
-                        let coinbase_transaction_currency:any
-                        let mycelium_transaction_hash:any  
-                        console.log(mycelium_payment_id);
+            // if (uncomplete_transactions.length){
+            //     for (let i =0; i < uncomplete_transactions.length; i++){
+            //             let myceliumTransactions = uncomplete_transactions[i];
+            //             let transaction_reference:string = myceliumTransactions.transaction_reference
+            //             let coin_sell_rate = myceliumTransactions.coin.sell_rate
+            //             let transaction_status:any
+            //             let mycelium_transaction_status:any
+            //             let mycelium_payment_id:any = myceliumTransactions.wallet_address_id
+            //             let mycelium_transaction_dollar_amount:any
+            //             let coinbase_transaction_currency:any
+            //             let mycelium_transaction_hash:any  
+            //             console.log(mycelium_payment_id);
                         
                        
-                        / * Get transaction status using mycelium API * /
-                        Api.axios_instance.get('https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders/'+mycelium_payment_id)
-                        .then(response => {
-                                    mycelium_transaction_status = response.data.status
+            //             / * Get transaction status using mycelium API * /
+            //             Api.axios_instance.get('https://gateway.gear.mycelium.com/gateways/b31f6babde01f965c84a3e82e11d4b1c04d06536397cdef303f449565e0caa9b/orders/'+mycelium_payment_id)
+            //             .then(response => {
+            //                         mycelium_transaction_status = response.data.status
                                     
-                                    mycelium_transaction_amount.value = parseFloat(response.data.amount_paid_in_btc)
-                                }
-                            )
-                            if (mycelium_transaction_status === 2){
-                                transaction_status =  "3"
-                                Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+transaction_reference)
-                            } else if(mycelium_transaction_status === 1){
-                                transaction_status = "6"
-                                Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+transaction_reference)
-                            }
+            //                         mycelium_transaction_amount.value = parseFloat(response.data.amount_paid_in_btc)
+            //                     }
+            //                 )
+            //                 if (mycelium_transaction_status === 2){
+            //                     transaction_status =  "3"
+            //                     Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+transaction_reference)
+            //                 } else if(mycelium_transaction_status === 1){
+            //                     transaction_status = "6"
+            //                     Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+transaction_reference)
+            //                 }
                             
-                            /* Recalculate Naira & Dollar Amount based on Coin Amount Received */
-                                let paid_dollar_amount:any = mycelium_transaction_amount.value * btc_coin_value
+            //                 /* Recalculate Naira & Dollar Amount based on Coin Amount Received */
+            //                     let paid_dollar_amount:any = mycelium_transaction_amount.value * btc_coin_value
                             
-                                let recalculated_naira_amount = coin_sell_rate * paid_dollar_amount
+            //                     let recalculated_naira_amount = coin_sell_rate * paid_dollar_amount
                                
-                                let formData = {
-                                    amount_received: mycelium_transaction_amount.value,
-                                    transaction_status: transaction_status,
-                                    paid_dollar_amount: paid_dollar_amount,
-                                    paid_naira_amount: recalculated_naira_amount,
-                                }
-                                await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+transaction_reference, formData)
+            //                     let formData = {
+            //                         amount_received: mycelium_transaction_amount.value,
+            //                         transaction_status: transaction_status,
+            //                         paid_dollar_amount: paid_dollar_amount,
+            //                         paid_naira_amount: recalculated_naira_amount,
+            //                     }
+            //                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+transaction_reference, formData)
                         
-                        }
-                    }
+            //             }
+            //         }
                 }
 
         /* This function gets all users from the database */
@@ -309,8 +309,8 @@ export default defineComponent({
         onMounted(() => {
             getTransactions()
             getAllUsers()
-            myceliumStatusUpdate()
-            setInterval(myceliumStatusUpdate, 10000)
+            // myceliumStatusUpdate()
+            // setInterval(myceliumStatusUpdate, 10000)
         })
 
         return {getTransactions, transactions, getAllUsers, users, total_transacted, selected, filteredTrades,

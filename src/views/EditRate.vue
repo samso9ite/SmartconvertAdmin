@@ -50,6 +50,26 @@
                                                 <label class="me-sm-2">Maximum Sell Limit</label>
                                                 <input type="text" class="form-control" v-model="coin.maximum_sell_limit">
                                             </div>
+                                            <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">First Address</label>
+                                                <input type="text" class="form-control" v-model="coin.first_address">
+                                            </div>
+                                            <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">Second Address</label>
+                                                <input type="text" class="form-control" v-model="coin.second_address">
+                                            </div>
+                                            <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">Third Address</label>
+                                                <input type="text" class="form-control" v-model="coin.third_address">
+                                            </div>
+                                            <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">Fourth Address</label>
+                                                <input type="text" class="form-control" v-model="coin.fourth_address">
+                                            </div>
+                                            <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">Fifth Address</label>
+                                                <input type="text" class="form-control" v-model="coin.fifth_address">
+                                            </div>
                                            
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Sell Active Status</label>
@@ -106,11 +126,18 @@ export default defineComponent({
             maximum_sell_limit: 0 as number,
             coin_short_code: '' as string,
             coin_sell_status: false as boolean,
-            coin_buy_status: false as boolean
+            coin_buy_status: false as boolean,
+            first_address: '' as string,
+            second_address: '' as string,
+            third_address: '' as string,
+            fourth_address: '' as string,
+            fifth_address: '' as string
         })
         const fillDetails = () => {
             const allCoin = ref<any>(store.state.all_coin)
             const selectedCoin = allCoin.value.filter((coin:any) => coin.unique_id == id)
+            console.log(selectedCoin);
+            
             coin.value.coin_description = selectedCoin[0].coin_description
             coin.value.coin_name = selectedCoin[0].coin_name
             coin.value.buy_rate = selectedCoin[0].buy_rate
@@ -123,6 +150,11 @@ export default defineComponent({
             coin.value.coin_short_code = selectedCoin[0].coin_short_code
             coin.value.coin_sell_status = selectedCoin[0].sell_active_status
             coin.value.coin_buy_status = selectedCoin[0].buy_active_status
+            coin.value.first_address = selectedCoin[0].first_address
+            coin.value.second_address = selectedCoin[0].second_address
+            coin.value.third_address = selectedCoin[0].third_address
+            coin.value.fourth_address = selectedCoin[0].fourth_address
+            coin.value.fifth_address = selectedCoin[0].fifth_address
         }
         const updateCoin = async () => {
             const formData = {
@@ -137,7 +169,12 @@ export default defineComponent({
                 maximum_sell_limit: coin.value.maximum_sell_limit,
                 short_code: coin.value.coin_short_code,
                 buy_active_status: coin.value.coin_buy_status,
-                sell_active_status: coin.value.coin_sell_status
+                sell_active_status: coin.value.coin_sell_status,
+                first_address: coin.value.first_address,
+                second_address: coin.value.second_address,
+                third_address: coin.value.third_address,
+                fourth_address: coin.value.fourth_address,
+                fifth_address: coin.value.fifth_address
             }
             try {
                 await Api.axios_instance.patch(Api.baseUrl+('api/v1/update-coin/'+id), formData)
