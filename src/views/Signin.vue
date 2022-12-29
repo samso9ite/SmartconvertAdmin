@@ -47,6 +47,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { toRefs } from 'vue'
 import {ref} from 'vue'  
 import Api from './Api.js'
+import { booleanLiteral } from '@babel/types'
 
 export default defineComponent({
     name: 'Signin',
@@ -54,17 +55,20 @@ export default defineComponent({
         const password = ref<string>('')
         const email = ref<string>('')
         let loading = ref<any>(false)
+        // let isAuthenticated =  ref<any>(true)
+        let isAuthenticated:boolean = true;
         const router = useRouter()
        
         const callApi = async () => {
             loading = true
              const formData = {email: email.value, password:password.value}
+            
              try{
                     await  Api.axios_instance.post(Api.baseUrl+'auth/jwt/create/', formData)
                     .then(res => {
-                        console.log(res.data);
                         const access = res.data.access
                         sessionStorage.setItem('access', access)
+                        sessionStorage.setItem('isAuthenticated', 'true')
                         router.push("/")
                     })
                 } catch(e){

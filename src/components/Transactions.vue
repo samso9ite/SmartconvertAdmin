@@ -37,7 +37,7 @@
                         <td>₦{{transaction.naira_amount}}</td>
                         <td> {{transaction.date}}</td>
                         <td v-if="transaction.trade_type === 'SELL' ">
-                            {{transaction.bank.account_number}} {{transaction.bank.account_name}}
+                            <!-- {{transaction.bank.account_number}} {{transaction.bank.account_name}} -->
                         </td>
                         <td v-else>
                             {{transaction.buy_payment_mode}}

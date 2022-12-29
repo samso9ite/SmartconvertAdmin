@@ -161,58 +161,58 @@ export default defineComponent({
             }
         }
         
-        /• This updates the status of transactions based on the coinbase status */
-        const coinbaseTransactionStatusUpdate = async () =>{
-            await getTransactions()
-            const all_transactions:any = transactions.value
-            let pending_transactions =  all_transactions.filter((transaction:any) => transaction.transaction_status == '1' && transaction.trade_type == 'SELL')
-            let awaiting_confirmation = all_transactions.filter((transaction:any) => transaction.transaction_status == '6' && transaction.trade_type == 'SELL')
-            let uncomplete_transactions = pending_transactions.concat(awaiting_confirmation)
+        /* This updates the status of transactions based on the coinbase status */
+        // const coinbaseTransactionStatusUpdate = async () =>{
+        //     await getTransactions()
+        //     const all_transactions:any = transactions.value
+        //     let pending_transactions =  all_transactions.filter((transaction:any) => transaction.transaction_status == '1' && transaction.trade_type == 'SELL')
+        //     let awaiting_confirmation = all_transactions.filter((transaction:any) => transaction.transaction_status == '6' && transaction.trade_type == 'SELL')
+        //     let uncomplete_transactions = pending_transactions.concat(awaiting_confirmation)
             
-            if (uncomplete_transactions){
+        //     if (uncomplete_transactions){
                 
-                for (let i =0; i < uncomplete_transactions.length; i++){
-                        let transactionCoinbase = uncomplete_transactions[i];
-                        let transaction_reference:string = transactionCoinbase.transaction_reference
-                        let coin_sell_rate = transactionCoinbase.coin.sell_rate
-                        let transaction_status:any
-                        let coinbase_transaction_status:any
-                        let coinbase_transaction_amount:any
-                        let coinbase_transaction_dollar_amount:any
-                        let coinbase_transaction_currency:any
-                        let coinbase_transaction_hash:any
-                        await Api.axios_instance.get(Api.baseUrl+'api/v1/get-coinbase-transaction-detail/'+transactionCoinbase.wallet_address_id+'/'+transactionCoinbase.address_account_id)
-                            .then(
-                                response => {
-                                    if(response.data.data.length){
-                                        coinbase_transaction_status = response.data.data[0].status
-                                        coinbase_transaction_amount = response.data.data[0].amount.amount
-                                        coinbase_transaction_currency = response.data.data[0].amount.currency
-                                        coinbase_transaction_hash = response.data.data[0].network.hash
-                                        coinbase_transaction_dollar_amount = response.data.data[0].native_amount.amount
-                                    }
-                                }   
-                            )
-                            if (coinbase_transaction_status === 'completed'){
-                                transaction_status =  "3"
-                            } else if(coinbase_transaction_status === 'pending'){
-                                transaction_status = "6"
-                            }
+        //         for (let i =0; i < uncomplete_transactions.length; i++){
+        //                 let transactionCoinbase = uncomplete_transactions[i];
+        //                 let transaction_reference:string = transactionCoinbase.transaction_reference
+        //                 let coin_sell_rate = transactionCoinbase.coin.sell_rate
+        //                 let transaction_status:any
+        //                 let coinbase_transaction_status:any
+        //                 let coinbase_transaction_amount:any
+        //                 let coinbase_transaction_dollar_amount:any
+        //                 let coinbase_transaction_currency:any
+        //                 let coinbase_transaction_hash:any
+        //                 await Api.axios_instance.get(Api.baseUrl+'api/v1/get-coinbase-transaction-detail/'+transactionCoinbase.wallet_address_id+'/'+transactionCoinbase.address_account_id)
+        //                     .then(
+        //                         response => {
+        //                             if(response.data.data.length){
+        //                                 coinbase_transaction_status = response.data.data[0].status
+        //                                 coinbase_transaction_amount = response.data.data[0].amount.amount
+        //                                 coinbase_transaction_currency = response.data.data[0].amount.currency
+        //                                 coinbase_transaction_hash = response.data.data[0].network.hash
+        //                                 coinbase_transaction_dollar_amount = response.data.data[0].native_amount.amount
+        //                             }
+        //                         }   
+        //                     )
+        //                     if (coinbase_transaction_status === 'completed'){
+        //                         transaction_status =  "3"
+        //                     } else if(coinbase_transaction_status === 'pending'){
+        //                         transaction_status = "6"
+        //                     }
                             
-                            /* Recalculate Naira & Dollar Amount based on Coin Amount Received */
-                                let recalculated_naira_amount = coin_sell_rate * coinbase_transaction_dollar_amount
-                                let formData= {
-                                    coin_amount: coinbase_transaction_amount,
-                                    hash_key: coinbase_transaction_hash,
-                                    transaction_status: transaction_status,
-                                    paid_dollar_amount: coinbase_transaction_dollar_amount,
-                                    paid_naira_amount: recalculated_naira_amount,
+        //                     /* Recalculate Naira & Dollar Amount based on Coin Amount Received */
+        //                         let recalculated_naira_amount = coin_sell_rate * coinbase_transaction_dollar_amount
+        //                         let formData= {
+        //                             coin_amount: coinbase_transaction_amount,
+        //                             hash_key: coinbase_transaction_hash,
+        //                             transaction_status: transaction_status,
+        //                             paid_dollar_amount: coinbase_transaction_dollar_amount,
+        //                             paid_naira_amount: recalculated_naira_amount,
                                     
-                                }
-                                await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+transaction_reference, formData)
-                    }
-            }
-        }
+        //                         }
+        //                         await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+transaction_reference, formData)
+        //             }
+        //     }
+        // }
     /* End of Coinbase Transaction */
 
     / * This section updates the status of transaction based on Mycelium Transaction status */
@@ -314,7 +314,7 @@ export default defineComponent({
         })
 
         return {getTransactions, transactions, getAllUsers, users, total_transacted, selected, filteredTrades,
-                pendingTransactions, paidTransactions, handleClick, coinbaseTransactionStatusUpdate}
+                pendingTransactions, paidTransactions, handleClick}
     },
 })
 </script>
