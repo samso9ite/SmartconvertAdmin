@@ -23,10 +23,11 @@
                         </td>
                         <td class="text-warning"  v-if="transaction.transaction_status == '1'">PENDING</td>
                         <td class="text-danger"  v-else-if="transaction.transaction_status == '3'">RECEIVED</td>
-                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">PAID</td>
+                        <td class="text-success"  v-else-if="transaction.transaction_status == '2'">FUNDED</td>
                         <td class="text-danger"  v-else-if="transaction.transaction_status == '4'">FAILED</td>
                         <td class="text-warning"  v-else-if="transaction.transaction_status == '5'">ON-HOLD</td>
                         <td class="text-warning"  v-else-if="transaction.transaction_status == '6'">AWAITING CONFIRMATION</td>
+                        <td class="text-warning"  v-else-if="transaction.transaction_status == '7'">PAID</td>
                         <td>
                             <span class="badge badge-danger">{{transaction.trade_type}}</span>
                         </td>
@@ -37,7 +38,7 @@
                         <td>₦{{transaction.naira_amount}}</td>
                         <td> {{transaction.date}}</td>
                         <td v-if="transaction.trade_type === 'SELL' ">
-                            <!-- {{transaction.bank.account_number}} {{transaction.bank.account_name}} -->
+                            {{transaction.bank.account_number}} {{transaction.bank.account_name}}
                         </td>
                         <td v-else>
                             {{transaction.buy_payment_mode}}

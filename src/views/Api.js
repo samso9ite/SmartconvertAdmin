@@ -7,7 +7,6 @@ axios_instance.interceptors.request.use(async function (config) {
 let access = await sessionStorage.getItem('access') 
     if(!navigator.onLine){
         alert("Hello! Seems you're offline");
-        
         return {
           headers: {},
           method: config.method,

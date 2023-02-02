@@ -65,7 +65,8 @@
                                                 <select class="form-control" v-model="tradeDetails.transaction_status"  > 
                                                     <option value="">Select Status</option>
                                                     <option value="1">PENDING</option>
-                                                    <option value="2">PAID</option>
+                                                    <option value="2">FUNDED</option>
+                                                    <option value="7">PAID</option>
                                                     <option value="5">ON-HOLD</option>
                                                     <option value="4">FAILED</option>
                                                     <option value="3">RECEIVED</option>
@@ -74,6 +75,14 @@
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Hash Key</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.hash_key"/>
+                                            </div>
+                                            <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">Hash Key Type</label>
+                                                <select class="form-control" v-model="tradeDetails.hash_key_type"  > 
+                                                    <option value="">Select Status</option>
+                                                    <option value="1">Link</option>
+                                                    <option value="2">Text</option>
+                                                </select>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Bank Name</label>
@@ -138,7 +147,8 @@ export default defineComponent({
             trade_type: '' as string,
             amount_received: 0 as number,
             paid_dollar_amount: 0 as number,
-            paid_naira_amount: 0 as number
+            paid_naira_amount: 0 as number,
+            hash_key_type: '' as string
         })
 
         const bankDetails = ref({
@@ -160,6 +170,7 @@ export default defineComponent({
             tradeDetails.value.naira_amount = selected[0].naira_amount
             tradeDetails.value.dollar_amount = selected[0].dollar_amount
             tradeDetails.value.hash_key = selected[0].hash_key
+            tradeDetails.value.hash_key_type = selected[0].hash_key_type
             tradeDetails.value.comment = selected[0].comment
             tradeDetails.value.transaction_status = selected[0].transaction_status
             tradeDetails.value.member_id = selected[0].user.member_id

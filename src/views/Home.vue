@@ -62,8 +62,7 @@
                                     <div class="widget-stat">
                                         <div class="coin-title">
                                             <span><i class="cc BTC-alt"></i></span>
-                                            <h5 class="d-inline-block ms-2 mb-3">Paid Trades
-                                            </h5>
+                                            <h5 class="d-inline-block ms-2 mb-3">Paid Trades </h5>
                                         </div>
                                         <h4 style="margin-left: 40px;"> {{paidTransactions}} <span class="badge badge-success ms-2"></span>
                                         </h4>
@@ -86,6 +85,9 @@
                                 <br>
                                 <ul class="nav nav-tabs">
                                    <li class="nav-item col-lg-3" @click="handleClick('2')"><a class="nav-link" data-toggle="tab"
+                                        >Funded Trades</a>
+                                    </li>
+                                    <li class="nav-item col-lg-3" @click="handleClick('7')"><a class="nav-link" data-toggle="tab"
                                         >Paid Trades</a>
                                     </li>
                                     <li class="nav-item"  @click="handleClick('1')">
@@ -99,7 +101,7 @@
                                      <li class="nav-item col-lg-3" @click="handleClick('5')"><a class="nav-link" data-toggle="tab"
                                         >ON HOLD</a>
                                     </li>
-                                    <li class="nav-item" @click="handleClick('4')"><a class="nav-link" data-toggle="tab"
+                                    <li class="nav-item mt-3"  @click="handleClick('4')"><a class="nav-link" data-toggle="tab"
                                        >Failed Trades</a>
                                     </li>
                                 </ul>
@@ -144,7 +146,7 @@ export default defineComponent({
 
         /* Getting all transaction details from the server */
         const getTransactions = async () => {
-            try{
+            try{ 
                 await  Api.axios_instance.get(Api.baseUrl+'api/v1/list-all-transactions')
                     .then(res => { 
                         let transacted_amount = 0
@@ -157,7 +159,7 @@ export default defineComponent({
                         total_transacted.value = transacted_amount
                     })
             }catch(e){
-                alert("There's an error, plese contact admin")
+                alert("There's an error, please contact admin")
             }
         }
         
@@ -298,7 +300,7 @@ export default defineComponent({
         })
 
         const paidTransactions = computed(() => {
-            return transactions.value.filter((transaction:any) => transaction.transaction_status == '2').length
+            return transactions.value.filter((transaction:any) => transaction.transaction_status == '2' || transaction.transaction_status == '7').length
         })
 
         filteredTrades = computed(() => {
