@@ -34,32 +34,32 @@
                                             <tbody>
                                                 <!-- <perfect-scrollbar> -->
                                                 <div class="col-lg-12" v-if="selected === '3' || selected ==='2'" style="width: 100% !important">
-                                                    <span v-for="user in filteredUsers" :key="user">
-                                                        <tr v-for="user in filteredUsers" :key="user">
-                                                            <!-- <router-link :to="{name:'VerifyUser', params:{reference:user.id}}"> -->
-                                                            <td>
-                                                                {{user.user.member_id}}
-                                                            </td>
-                                                            <td>
-                                                                {{user.user.first_name}} {{user.user.last_name}}
-                                                            </td>
-                                                            <td>
-                                                                {{user.user.email}}
-                                                            </td>
-                                                            <td>
-                                                                {{user.user.phone_number}}
-                                                            </td>
-                                                            <td >{{user.address}}</td>
-                                                            <td>{{user.user.total_transactions}} Transactions</td>
-                                                            <td>
-                                                                <router-link :to="{name:'VerifyUser', params:{reference:user.id}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
-                                                            </td>
-                                                        </tr>
-                                                    </span>
+                                                    <div v-if="filteredUsers.length">
+                                                            <tr v-for="user in filteredUsers" :key="user">
+                                                                <td>
+                                                                    {{user.user.member_id}}
+                                                                </td>
+                                                                <td>
+                                                                    {{user.user.first_name}} {{user.user.last_name}}
+                                                                </td>
+                                                                <td>
+                                                                    {{user.user.email}}
+                                                                </td>
+                                                                <td>
+                                                                    {{user.user.phone_number}}
+                                                                </td>
+                                                                <td >{{user.address}}</td>
+                                                                <td>{{user.user.total_transactions}} Transactions</td>
+                                                                <td>
+                                                                    <router-link :to="{name:'VerifyUser', params:{reference:user.id}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
+                                                                </td>
+                                                            </tr>
+                                                    </div>
                                                 </div>
 
                                                 <div v-else>
-                                                    <tr v-for="user in filteredUsers" :key="user" >
+                                                    <div v-if="filteredUsers">
+                                                        `<tr v-for="user in filteredUsers" :key="user" >
                                                             <td>
                                                                 {{user.user.member_id}}
                                                             </td>
@@ -74,10 +74,10 @@
                                                             </td>
                                                             <td >{{user.address}}</td>
                                                             <td>{{user.user.total_transactions}} Transactions</td>
-                                                    </tr>
+                                                        </tr>
+                                                    </div>`
                                                 </div>
                                                 
-                                                <!-- </perfect-scrollbar> -->
                                             </tbody>
                                         </table>
                                 </div>
@@ -139,8 +139,5 @@ export default defineComponent({
     width: 25% !important;
     text-align: center;
 }
-    .ps{
-        /* height:300px; */
-        /* width:600px */
-    }
+    
 </style>
