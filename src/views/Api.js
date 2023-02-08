@@ -16,8 +16,21 @@ let access = await sessionStorage.getItem('access')
   access ? config.headers.Authorization = `JWT ${access}` : null;
   return config;
 });
-// const baseUrl = 'https://api.smartconvert.ng/'
-const baseUrl = 'http://127.0.0.1:8000/'
+
+// Route user to login when token expires
+axios_instance.interceptors.response.use(undefined, function (error) {
+  if (error) {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+        localStorage.clear();
+        sessionStorage.clear();
+        return window.location.href="https://admin.smartconvert.ng/#/sign-in";
+    }
+  }
+})
+
+const baseUrl = 'https://api.smartconvert.ng/'
+// const baseUrl = 'http://127.0.0.1:8000/'
 export default { 
   axios_instance,
   baseUrl,
