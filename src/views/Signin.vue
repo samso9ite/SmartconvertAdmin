@@ -49,6 +49,7 @@ import {ref} from 'vue'
 import Api from './Api.js'
 import { booleanLiteral } from '@babel/types'
 
+
 export default defineComponent({
     name: 'Signin',
     setup() {
@@ -84,4 +85,10 @@ export default defineComponent({
     },
 })
 </script>
+
+<style>
+.VuePassword__Toggle{
+    padding-left: 9rem !important;
+}
+</style>
 

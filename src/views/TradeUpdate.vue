@@ -31,38 +31,38 @@
                                             </div>
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Coin Address</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.coin_address" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.coin_address" :disabled="tradeDetails.editable"/>
                                             </div>
                                              <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Amount</label>
                                                 <label class="me-sm-2" v-else>Coin Amount</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.coin_amount" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.coin_amount" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Amount Received </label>
                                                 <label class="me-sm-2" v-else>Coin Amount Received</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.amount_received" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.amount_received" :disabled="tradeDetails.editable"/>
                                             </div>
                                              <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Naira Amount</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.naira_amount" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.naira_amount" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Naira Amount Received</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.paid_naira_amount" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.paid_naira_amount" :disabled="tradeDetails.editable"/>
                                             </div>
                                             
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Dollar Amount Received</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.paid_dollar_amount" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.paid_dollar_amount" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Dollar Amount</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.dollar_amount" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.dollar_amount" :disabled="tradeDetails.editable" />
                                             </div>
                                               <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Transaction Status</label>
-                                                <select class="form-control" v-model="tradeDetails.transaction_status"  > 
+                                                <select class="form-control" v-model="tradeDetails.transaction_status" :disabled="tradeDetails.editable"> 
                                                     <option value="">Select Status</option>
                                                     <option value="1">PENDING</option>
                                                     <option value="2">FUNDED</option>
@@ -74,11 +74,11 @@
                                             </div>
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Hash Key</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.hash_key"/>
+                                                <input type="text" class="form-control" v-model="tradeDetails.hash_key" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Hash Key Type</label>
-                                                <select class="form-control" v-model="tradeDetails.hash_key_type"  > 
+                                                <select class="form-control" v-model="tradeDetails.hash_key_type"  :disabled="tradeDetails.editable"> 
                                                     <option value="">Select Status</option>
                                                     <option value="1">Link</option>
                                                     <option value="2">Text</option>
@@ -86,24 +86,27 @@
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Bank Name</label>
-                                                <input type="text" class="form-control" v-model="bankDetails.bank_name"/>
+                                                <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Account Number</label>
-                                                <input type="text" class="form-control" v-model="bankDetails.account_number"/>
+                                                <input type="text" class="form-control" v-model="bankDetails.account_number" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Account Name</label>
-                                                <input type="text" class="form-control" v-model="bankDetails.bank_name"/>
+                                                <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-12">
                                                 <label class="me-sm-2">Comment</label>
-                                                <textarea  class="form-control" v-model="tradeDetails.comment"/>
+                                                <textarea  class="form-control" v-model="tradeDetails.comment" :disabled="tradeDetails.editable"/>
                                             </div>
-                                            <div class="col-12">
+
+                                           
+                                            <div v-if="tradeDetails.editable == false">
                                                 <button class="btn btn-success waves-effect">Save</button>
                                             </div>
                                         </div>
+                                       
                                     </form>
                                 </div>
                             </div>
@@ -148,7 +151,8 @@ export default defineComponent({
             amount_received: 0 as number,
             paid_dollar_amount: 0 as number,
             paid_naira_amount: 0 as number,
-            hash_key_type: '' as string
+            hash_key_type: '' as string,
+            editable: false as boolean
         })
 
         const bankDetails = ref({
@@ -175,6 +179,7 @@ export default defineComponent({
             tradeDetails.value.transaction_status = selected[0].transaction_status
             tradeDetails.value.member_id = selected[0].user.member_id
             tradeDetails.value.trade_type = selected[0].trade_type
+            tradeDetails.value.editable = selected[0].editable
             if (tradeDetails.value.trade_type == 'SELL'){
                 bankDetails.value.bank_name = selected[0].bank.bank_name
                 bankDetails.value.account_name = selected[0].bank.account_name
@@ -187,6 +192,13 @@ export default defineComponent({
 
         /* Update Trade Details */
         const updateTransaction = async () => {
+            
+            if(tradeDetails.value.transaction_status == '2' || tradeDetails.value.transaction_status == '4' || tradeDetails.value.transaction_status == '7'){
+                tradeDetails.value.editable = true
+            }else{
+                tradeDetails.value.editable = false
+            }
+            console.log(tradeDetails.value.editable);
             const sellFormData = {
                 coin_amount:tradeDetails.value.coin_amount,
                 naira_amount:tradeDetails.value.naira_amount,
@@ -195,7 +207,8 @@ export default defineComponent({
                 transaction_status: tradeDetails.value.transaction_status,
                 paid_dollar_amount: tradeDetails.value.paid_dollar_amount,
                 paid_naira_amount: tradeDetails.value.paid_naira_amount,
-                amount_received: tradeDetails.value.amount_received
+                amount_received: tradeDetails.value.amount_received,
+                editable: tradeDetails.value.editable
             }
             const buyFormData = {
                 coin_amount:tradeDetails.value.coin_amount,
@@ -203,8 +216,8 @@ export default defineComponent({
                 dollar_amount: tradeDetails.value.dollar_amount,
                 comment: tradeDetails.value.comment,
                 transaction_status: tradeDetails.value.transaction_status,
+                editable: tradeDetails.value.editable
             }
-            console.log(sellFormData, buyFormData);
             
             try {
                 if(tradeDetails.value.trade_type == 'SELL'){

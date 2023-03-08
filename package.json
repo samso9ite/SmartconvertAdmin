@@ -15,6 +15,7 @@
     "package.json": "^2.0.1",
     "vue": "^3.0.0",
     "vue-axios": "^3.4.1",
+    "vue-password": "^3.1.0",
     "vue-router": "^4.0.0-0",
     "vue3-perfect-scrollbar": "^1.6.0",
     "vuex": "^4.0.0-0"

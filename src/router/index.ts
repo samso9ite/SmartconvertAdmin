@@ -9,6 +9,7 @@ import Users from '../views/Users.vue'
 import Signin from '../views/Signin.vue'
 import TradeUpdate from '../views/TradeUpdate.vue'
 import VerifyUser from '../views/VerifyUser.vue'
+import Bank from '../views/Bank.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -68,6 +69,23 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/verify-user/:reference',
+    name: 'VerifyUser',
+    component: VerifyUser,
+    props: true,
+    meta: {requiresAuth: true}
+  },
+
+  {
+    path: 'add-bank',
+    name: 'Bank',
+    component: Bank,
+    props: true,
+    meta: {requiresAuth: true}
+  },
+
+
+  {
+    path: '/',
     name: 'VerifyUser',
     component: VerifyUser,
     props: true,
