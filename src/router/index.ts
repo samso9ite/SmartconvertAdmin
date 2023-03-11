@@ -10,6 +10,7 @@ import Signin from '../views/Signin.vue'
 import TradeUpdate from '../views/TradeUpdate.vue'
 import VerifyUser from '../views/VerifyUser.vue'
 import Bank from '../views/Bank.vue'
+import CreateCoin from '../views/CreateCoin.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -76,9 +77,16 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   {
-    path: 'add-bank',
+    path: '/add-bank',
     name: 'Bank',
     component: Bank,
+    props: true,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/add-coin',
+    name: 'CreateCoin',
+    component: CreateCoin,
     props: true,
     meta: {requiresAuth: true}
   },

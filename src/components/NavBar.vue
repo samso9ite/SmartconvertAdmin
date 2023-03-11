@@ -45,6 +45,13 @@
                         </router-link>
                     </li>
                     <li>
+                        <router-link :to="'/add-bank'">
+                            <a  title="Banks">
+                                <span><i class="fa fa-bank" style="font-size: 18px"></i></span>
+                            </a>
+                        </router-link>
+                    </li>
+                    <li>
                         <router-link :to="'/testimonials'">
                             <a  data-toggle="tooltip" data-placement="right" title="Testimonials">
                                 <span><i class="las la-thumbs-up"></i></span>

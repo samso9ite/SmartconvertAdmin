@@ -33,49 +33,52 @@
                                     
                                             <tbody>
                                                 <!-- <perfect-scrollbar> -->
+                                             <div v-if="filteredUsers.length > 0">
                                                 <div class="col-lg-12" v-if="selected === '3' || selected ==='2'" style="width: 100% !important">
-                                                    <div v-if="filteredUsers.length">
-                                                            <tr v-for="user in filteredUsers" :key="user">
+                                                   
+                                                            <tr v-for="account in filteredUsers" :key="account">
                                                                 <td>
-                                                                    {{user.user.member_id}}
+                                                                    {{account.user.member_id}}
                                                                 </td>
                                                                 <td>
-                                                                    {{user.user.first_name}} {{user.user.last_name}}
+                                                                    {{account.user.first_name}} {{account.user.last_name}}
                                                                 </td>
                                                                 <td>
-                                                                    {{user.user.email}}
+                                                                    {{account.user.email}}
                                                                 </td>
                                                                 <td>
-                                                                    {{user.user.phone_number}}
+                                                                    {{account.user.phone_number}}
                                                                 </td>
-                                                                <td >{{user.address}}</td>
-                                                                <td>{{user.user.total_transactions}} Transactions</td>
+                                                                <td >{{account.address}}</td>
+                                                                <td>{{account.user.total_transactions}} Transactions</td>
                                                                 <td>
-                                                                    <router-link :to="{name:'VerifyUser', params:{reference:user.id}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
+                                                                    <router-link :to="{name:'VerifyUser', params:{reference:account.id}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
                                                                 </td>
                                                             </tr>
                                                     </div>
-                                                </div>
+                                                
 
                                                 <div v-else>
-                                                    <div v-if="filteredUsers">
-                                                        `<tr v-for="user in filteredUsers" :key="user" >
+                                                        <tr v-for="account in filteredUsers" :key="account" >
                                                             <td>
-                                                                {{user.user.member_id}}
+                                                                {{account.user.member_id}}
                                                             </td>
                                                             <td>
-                                                                {{user.user.first_name}} {{user.user.last_name}}
+                                                                {{account.user.first_name}} {{account.user.last_name}}
                                                             </td>
                                                             <td>
-                                                                {{user.user.email}}
+                                                                {{account.user.email}}
                                                             </td>
                                                             <td>
-                                                                {{user.user.phone_number}}
+                                                                {{account.user.phone_number}}
                                                             </td>
-                                                            <td >{{user.address}}</td>
-                                                            <td>{{user.user.total_transactions}} Transactions</td>
+                                                            <td >{{account.address}}</td>
+                                                            <td>{{account.user.total_transactions}} Transactions</td>
                                                         </tr>
-                                                    </div>`
+                                                    </div>
+                                                </div>
+                                                <div v-else>
+                                                    <h5><center>No Registered User</center></h5>
                                                 </div>
                                                 
                                             </tbody>
@@ -115,6 +118,8 @@ export default defineComponent({
                 Api.axios_instance.get(Api.baseUrl+'api/v1/list-users-profile')
                 .then(res => {
                     users.value = res.data
+                    console.log(users.value);
+                    
                 })
             }catch(e){
                 console.log("Error Occured");

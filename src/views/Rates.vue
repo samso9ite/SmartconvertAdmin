@@ -6,6 +6,7 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
+
                         <div class="card-header border-0">
                             <h4 class="card-title">Rates</h4>
                         </div>
@@ -31,6 +32,10 @@
                                     </div>
                                 </ul>
                             </div>
+                        </div>
+
+                        <div class="col-12">
+                           <router-link :to="'/add-coin'"><button class="btn btn-success waves-effect" type="submit">Create New Coin</button> </router-link>
                         </div>
                     </div>
                 </div>

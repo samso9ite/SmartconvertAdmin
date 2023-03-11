@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div>
         <NavBar />
             <div class="page_title">
@@ -7,43 +7,7 @@
             <div class="content-body" :class="{'mobileStyle': showMobileStyle}">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xl-3 col-md-4">
-                            <div class="card settings_menu">
-                                <div class="card-header">
-                                    <h4 class="card-title">Settings</h4>
-                                </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li class="nav-item">
-                                           <router-link :to="'/settings'">
-                                                <a class="nav-link" style="color:white">
-                                                    <i class="la la-user"></i>
-                                                    <span>Edit Profile</span>
-                                                </a>
-                                            </router-link>
-                                        </li>
-                                      
-                                        <li class="nav-item">
-                                            <router-link :to="'/account-settings'">
-                                                <a class="nav-link active" style="color:white">
-                                                    <i class="la la-university"></i>
-                                                    <span>Bank Accounts</span>
-                                                </a>
-                                            </router-link>
-                                        </li>
-    
-                                        <li class="nav-item">
-                                            <router-link :to="'/account-verification'">
-                                                <a class="nav-link active" style="color:white">
-                                                    <i class="las la-user-check"></i>
-                                                    <span>Account Verification</span>
-                                                </a>
-                                            </router-link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="col-xl-9 col-md-8">
                             <div class="card">
                                 <div class="card-header">
@@ -82,7 +46,6 @@
                                            <div class="row">
                                                 <form @submit.prevent="verifyAccount">
                                                     <div class="row">
-                                                        <h5>Ensure your bank account name is the same as your registered name.<br><b> Payment wouldn't be made to third party account.</b></h5>
                                                         <div class="mb-3 col-xl-4">
                                                             <label class="me-sm-2">Bank Name</label>
                                                             <select class="form-control" v-model="bank_details">
@@ -121,6 +84,8 @@ import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import Api from './Api.js'
 import { useRoute } from 'vue-router'
+import axios from 'axios'
+
     export default{
             name: 'Bank',
             components: {Footer, NavBar},
@@ -165,10 +130,8 @@ import { useRoute } from 'vue-router'
                         this.account_number = response.data.data.account_number
                        })
                     .catch(() => {
-                        this.$toast.error({
-                        title:'Oops!',
-                        message:'Bank Details Incorrect'
-                        })
+                       window.alert("Bank Details Incorrect")
+                        
                     })
                     const bankData = {
                         account_name: this.account_name,
@@ -178,10 +141,7 @@ import { useRoute } from 'vue-router'
                     }
                 await Api.axios_instance.post(Api.baseUrl+'api/v1/add-bank', bankData) 
                     .then(response => {
-                        this.$toast.success({
-                        title:'Welldone!',
-                        message:'Bank Details Added'
-                        })
+                        window.alert("Bank has been added")
                         this.account_name = ""
                         this.account_number = ""
                         this.getSavedAccounts()
@@ -194,10 +154,7 @@ import { useRoute } from 'vue-router'
                deleteBankAccount(id){
                     Api.axios_instance.delete(Api.baseUrl+'api/v1/delete-bank/'+id) 
                     .then(response => {
-                        this.$toast.success({
-                        title:'Welldone!',
-                        message:'Bank Account Deleted'
-                        })
+                       window.alert("Bank Account Deleted")
                         this.getSavedAccounts()
                     })
                },
@@ -211,9 +168,9 @@ import { useRoute } from 'vue-router'
             mounted(){
                 this.getAllBanks()
                 this.getSavedAccounts()
-                this.screenSize()
+                // this.screenSize()
             }
         }
     </script>
     
-     -->
+    
