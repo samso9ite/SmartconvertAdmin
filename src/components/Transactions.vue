@@ -8,7 +8,7 @@
                         <td>REFERENCE</td>
                         <td>STATUS</td>
                         <td>TRANSACTION TYPE</td>
-                        <td>COIN</td>
+                        <td>AMOUNT</td>
                         <td>COIN RECEIVED</td>
                         <td>NAIRA AMOUNT</td>
                         <td>DATE</td>
@@ -37,7 +37,7 @@
                         <td>{{transaction.coin_amount}}</td>
                         <td>₦{{transaction.naira_amount}}</td>
                         <td> {{transaction.date}}</td>
-                        <td v-if="transaction.trade_type === 'SELL' ">
+                        <td v-if="transaction.trade_type === 'SELL' && transaction.coin.coin_name != 'Perfect Money'">
                             {{transaction.bank.account_number}} {{transaction.bank.account_name}}
                         </td>
                         <td v-else>

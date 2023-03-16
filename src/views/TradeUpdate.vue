@@ -26,17 +26,17 @@
                                                 <input type="text" class="form-control" v-model="tradeDetails.member_id" disabled>
                                             </div>
                                             <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">Coin</label>
+                                                <label class="me-sm-2">Asset</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.coin" disabled>
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.coin != 'Perfect Money'">
                                                 <label class="me-sm-2">Coin Address</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.coin_address" :disabled="tradeDetails.editable"/>
                                             </div>
                                              <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Amount</label>
+                                                <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Account</label>
                                                 <label class="me-sm-2" v-else>Coin Amount</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.coin_amount" :disabled="tradeDetails.editable"/>
+                                                <input type="text" class="form-control" v-model="tradeDetails.pm_account" :disabled="tradeDetails.editable"/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Amount Received </label>
@@ -84,7 +84,7 @@
                                                     <option value="2">Text</option>
                                                 </select>
                                             </div>
-                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'">
                                                 <label class="me-sm-2">Bank Name</label>
                                                 <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
                                             </div>
@@ -152,7 +152,8 @@ export default defineComponent({
             paid_dollar_amount: 0 as number,
             paid_naira_amount: 0 as number,
             hash_key_type: '' as string,
-            editable: false as boolean
+            editable: false as boolean,
+            pm_account: '' as string
         })
 
         const bankDetails = ref({
@@ -164,10 +165,14 @@ export default defineComponent({
         const setTradeValues = () => {
             const reference = route.params.reference
             const transactions = ref<any>(store.state.all_transactions)
+            console.log(transactions);
+            
             const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference)
+            console.log(selected);
             
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
+
             tradeDetails.value.first_name = selected[0].user.first_name
             tradeDetails.value.last_name = selected[0].user.last_name
             tradeDetails.value.coin_amount = selected[0].coin_amount
@@ -179,8 +184,9 @@ export default defineComponent({
             tradeDetails.value.transaction_status = selected[0].transaction_status
             tradeDetails.value.member_id = selected[0].user.member_id
             tradeDetails.value.trade_type = selected[0].trade_type
+            tradeDetails.value.pm_account = selected[0].pm_account
             tradeDetails.value.editable = selected[0].editable
-            if (tradeDetails.value.trade_type == 'SELL'){
+            if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money"){
                 bankDetails.value.bank_name = selected[0].bank.bank_name
                 bankDetails.value.account_name = selected[0].bank.account_name
                 bankDetails.value.account_number = selected[0].bank.account_number
@@ -198,7 +204,6 @@ export default defineComponent({
             }else{
                 tradeDetails.value.editable = false
             }
-            console.log(tradeDetails.value.editable);
             const sellFormData = {
                 coin_amount:tradeDetails.value.coin_amount,
                 naira_amount:tradeDetails.value.naira_amount,
