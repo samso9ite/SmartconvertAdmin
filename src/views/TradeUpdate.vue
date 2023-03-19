@@ -84,7 +84,7 @@
                                                     <option value="2">Text</option>
                                                 </select>
                                             </div>
-                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'">
+                                            <!-- <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'">
                                                 <label class="me-sm-2">Bank Name</label>
                                                 <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
                                             </div>
@@ -95,7 +95,7 @@
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Account Name</label>
                                                 <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
-                                            </div>
+                                            </div> -->
                                             <div class="mb-3 col-xl-12">
                                                 <label class="me-sm-2">Comment</label>
                                                 <textarea  class="form-control" v-model="tradeDetails.comment" :disabled="tradeDetails.editable"/>
@@ -213,7 +213,8 @@ export default defineComponent({
                 paid_dollar_amount: tradeDetails.value.paid_dollar_amount,
                 paid_naira_amount: tradeDetails.value.paid_naira_amount,
                 amount_received: tradeDetails.value.amount_received,
-                editable: tradeDetails.value.editable
+                hash_key: tradeDetails.value.hash_key,
+                hash_key_type: tradeDetails.value.hash_key_type
             }
             const buyFormData = {
                 coin_amount:tradeDetails.value.coin_amount,
@@ -221,18 +222,28 @@ export default defineComponent({
                 dollar_amount: tradeDetails.value.dollar_amount,
                 comment: tradeDetails.value.comment,
                 transaction_status: tradeDetails.value.transaction_status,
-                editable: tradeDetails.value.editable
+              
             }
+            
+        
             
             try {
                 if(tradeDetails.value.trade_type == 'SELL'){
+                    console.log(sellFormData);
+                    
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, sellFormData)
                     .then(res => {
+                        console.log(res);
                         Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
                         router.push({path:'/'})
                         alert('Transaction Updated Successfully')
                     })
+                    .catch(error => {
+                        console.log(error);
+                        
+                    })
                 } else {
+                    console.log(buyFormData);
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, buyFormData)
                     .then(res => {
                         Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)

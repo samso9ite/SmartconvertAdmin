@@ -37,7 +37,7 @@
                         <td>{{transaction.coin_amount}}</td>
                         <td>₦{{transaction.naira_amount}}</td>
                         <td> {{transaction.date}}</td>
-                        <td v-if="transaction.trade_type === 'SELL' && transaction.coin.coin_name != 'Perfect Money'">
+                        <td v-if="transaction.trade_type === 'SELL'">
                             {{transaction.bank.account_number}} {{transaction.bank.account_name}}
                         </td>
                         <td v-else>
