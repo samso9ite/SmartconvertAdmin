@@ -73,10 +73,10 @@
                                                 </select>
                                             </div>
                                             <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">Hash Key</label>
+                                                <label class="me-sm-2"  v-if="tradeDetails.trade_type == 'SELL'">Hash Key</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.hash_key" :disabled="tradeDetails.editable"/>
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-6"  v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Hash Key Type</label>
                                                 <select class="form-control" v-model="tradeDetails.hash_key_type"  :disabled="tradeDetails.editable"> 
                                                     <option value="">Select Status</option>
