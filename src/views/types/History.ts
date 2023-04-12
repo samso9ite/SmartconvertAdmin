@@ -1,7 +1,7 @@
 interface Transaction {
     id: number,
     amount_received: number,
-    bank: {account_name:string, account_number?:number, bank_name:string},
+    bank: {account_name:string, account_number?:string, bank_name:string},
     // bank: any
     buy_payment_mode: string,
     coin: {'coin_name':string, 'coin_code':string},

@@ -149,6 +149,7 @@ export default defineComponent({
             try{ 
                 await  Api.axios_instance.get(Api.baseUrl+'api/v1/list-all-transactions')
                     .then(res => { 
+                        console.log(res);
                         let transacted_amount = 0
                         const all_transactions = transactions.value = res.data
                         store.commit('storeTransactions', {all_transactions:res.data})

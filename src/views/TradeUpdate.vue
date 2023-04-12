@@ -11,7 +11,9 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Update Trade</h4>
+                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade </h4><br>
+
+                                    <h5> <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span></h5>
                                 </div>
                                 <div class="card-body">
                                     <form @submit.prevent="updateTransaction">
@@ -31,12 +33,15 @@
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.coin != 'Perfect Money'">
                                                 <label class="me-sm-2">Coin Address</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.coin_address" :disabled="tradeDetails.editable"/>
+                                                <input type="text" class="form-control" v-model="tradeDetails.coin_address" disabled/>
                                             </div>
-                                             <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Account</label>
-                                                <label class="me-sm-2" v-else>Coin Amount</label>
+                                             <div class="mb-3 col-xl-6"  v-if="tradeDetails.coin === 'Perfect Money'">
+                                                <label class="me-sm-2" >PM Account</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.pm_account" :disabled="tradeDetails.editable"/>
+                                            </div>
+                                            <div class="mb-3 col-xl-6"  v-else>
+                                                <label class="me-sm-2" >Coin Amount</label>
+                                                <input type="text" class="form-control" v-model="tradeDetails.coin_amount" disabled/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2"  v-if="tradeDetails.coin === 'Perfect Money'">PM Amount Received </label>
@@ -45,7 +50,7 @@
                                             </div>
                                              <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Naira Amount</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.naira_amount" :disabled="tradeDetails.editable"/>
+                                                <input type="text" class="form-control" v-model="tradeDetails.naira_amount" disabled/>
                                             </div>
                                             <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
                                                 <label class="me-sm-2">Naira Amount Received</label>
@@ -58,7 +63,7 @@
                                             </div>
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Dollar Amount</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.dollar_amount" :disabled="tradeDetails.editable" />
+                                                <input type="text" class="form-control" v-model="tradeDetails.dollar_amount" disabled />
                                             </div>
                                               <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Transaction Status</label>
@@ -84,6 +89,7 @@
                                                     <option value="2">Text</option>
                                                 </select>
                                             </div>
+                                          
                                             <!-- <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'">
                                                 <label class="me-sm-2">Bank Name</label>
                                                 <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
@@ -100,8 +106,7 @@
                                                 <label class="me-sm-2">Comment</label>
                                                 <textarea  class="form-control" v-model="tradeDetails.comment" :disabled="tradeDetails.editable"/>
                                             </div>
-
-                                           
+                                       
                                             <div v-if="tradeDetails.editable == false">
                                                 <button class="btn btn-success waves-effect">Save</button>
                                             </div>
