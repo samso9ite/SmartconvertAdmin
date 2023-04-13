@@ -52,8 +52,11 @@
                                                                 <td >{{account.address}}</td>
                                                                 <td>{{account.user.total_transactions}} Transactions</td>
                                                                 <td>
-                                                                    <router-link :to="{name:'VerifyUser', params:{reference:account.id}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
+                                                                    <router-link :to="'verify-user/'+account.id"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
                                                                 </td>
+                                                                <!-- <td>
+                                                                    <a :href="'/?#/verify-user/'+account.id"> <span><i class="la la-pen-alt"></i>Edit</span> </a>
+                                                                </td> -->
                                                             </tr>
                                                     </div>
                                                 

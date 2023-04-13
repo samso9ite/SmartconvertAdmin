@@ -39,7 +39,7 @@ import { defineComponent, ref } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import Api from './Api'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 
 export default defineComponent({
@@ -47,6 +47,7 @@ export default defineComponent({
     components: {Footer, NavBar},
     setup(){
         const route = useRoute()
+        const router = useRouter()
         const reference = route.params.reference
         let userData = ref<any>({})
         let id = ref<string>('')
@@ -68,6 +69,7 @@ export default defineComponent({
                 Api.axios_instance.patch(Api.baseUrl+('api/v1/id-approval-dissaproval/'+reference), {transaction_status:status})
                 .then(res => {
                     alert("You request has been processed")
+                    router.push('/users')
                 })
             }catch{
                 console.log("There's an error please contact admin");

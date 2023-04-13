@@ -92,13 +92,13 @@ const routes: Array<RouteRecordRaw> = [
   },
 
 
-  {
-    path: '/',
-    name: 'VerifyUser',
-    component: VerifyUser,
-    props: true,
-    meta: {requiresAuth: true}
-  },
+  // {
+  //   path: '/',
+  //   name: 'VerifyUser',
+  //   component: VerifyUser,
+  //   props: true,
+  //   meta: {requiresAuth: true}
+  // },
 
 ]
 
