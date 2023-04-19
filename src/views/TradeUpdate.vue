@@ -57,13 +57,14 @@
                                                 <input type="text" class="form-control" v-model="tradeDetails.paid_naira_amount" :disabled="tradeDetails.editable"/>
                                             </div>
                                             
-                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
-                                                <label class="me-sm-2">Dollar Amount Received</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.paid_dollar_amount" :disabled="tradeDetails.editable"/>
-                                            </div>
+                                           
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Dollar Amount</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.dollar_amount" disabled />
+                                            </div>
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
+                                                <label class="me-sm-2">Dollar Amount Received</label>
+                                                <input type="text" class="form-control" v-model="tradeDetails.paid_dollar_amount" :disabled="tradeDetails.editable"/>
                                             </div>
                                               <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Transaction Status</label>
@@ -77,11 +78,11 @@
                                                     <option value="3">RECEIVED</option>
                                                 </select>
                                             </div>
-                                            <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2"  v-if="tradeDetails.trade_type == 'SELL'">Hash Key</label>
+                                            <div class="mb-3 col-xl-6" >
+                                                <label class="me-sm-2"  >Hash Key</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.hash_key" :disabled="tradeDetails.editable"/>
                                             </div>
-                                            <div class="mb-3 col-xl-6"  v-if="tradeDetails.trade_type == 'SELL'">
+                                            <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Hash Key Type</label>
                                                 <select class="form-control" v-model="tradeDetails.hash_key_type"  :disabled="tradeDetails.editable"> 
                                                     <option value="">Select Status</option>
@@ -170,10 +171,8 @@ export default defineComponent({
         const setTradeValues = () => {
             const reference = route.params.reference
             const transactions = ref<any>(store.state.all_transactions)
-            console.log(transactions);
             
             const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference)
-            console.log(selected);
             
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
@@ -227,14 +226,14 @@ export default defineComponent({
                 dollar_amount: tradeDetails.value.dollar_amount,
                 comment: tradeDetails.value.comment,
                 transaction_status: tradeDetails.value.transaction_status,
-              
+                hash_key: tradeDetails.value.hash_key,
+                hash_key_type: tradeDetails.value.hash_key_type
             }
             
         
             
             try {
                 if(tradeDetails.value.trade_type == 'SELL'){
-                    console.log(sellFormData);
                     
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, sellFormData)
                     .then(res => {

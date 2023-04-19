@@ -24,7 +24,7 @@ axios_instance.interceptors.response.use(undefined, function (error) {
     if (error.response.status === 401 && !originalRequest._retry) {
         localStorage.clear();
         sessionStorage.clear();
-        // return window.location.href="https://admin.smartconvert.ng/#/sign-in";
+        return window.location.href="https://admin.smartconvert.ng/#/sign-in";
     }
   }
 })
