@@ -149,7 +149,7 @@ export default defineComponent({
             coin_amount: 0 as number,
             naira_amount: 0 as number,
             dollar_amount: 0 as number,
-            transaction_status:'' as string,
+            transaction_status:0 as number,
             hash_key: '' as string,
             comment: 'No Comment' as string,
             member_id: '' as string,
@@ -157,7 +157,7 @@ export default defineComponent({
             amount_received: 0 as number,
             paid_dollar_amount: 0 as number,
             paid_naira_amount: 0 as number,
-            hash_key_type: '' as string,
+            hash_key_type: '2' as string,
             editable: false as boolean,
             pm_account: '' as string
         })
@@ -190,6 +190,8 @@ export default defineComponent({
             tradeDetails.value.trade_type = selected[0].trade_type
             tradeDetails.value.pm_account = selected[0].pm_account
             tradeDetails.value.editable = selected[0].editable
+            console.log(tradeDetails.value.editable);
+            
             if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money"){
                 bankDetails.value.bank_name = selected[0].bank.bank_name
                 bankDetails.value.account_name = selected[0].bank.account_name
@@ -202,9 +204,12 @@ export default defineComponent({
 
         /* Update Trade Details */
         const updateTransaction = async () => {
+            console.log(tradeDetails.value.transaction_status);
             
-            if(tradeDetails.value.transaction_status == '2' || tradeDetails.value.transaction_status == '4' || tradeDetails.value.transaction_status == '7'){
-                tradeDetails.value.editable = true
+            if(tradeDetails.value.transaction_status == 2 || tradeDetails.value.transaction_status == 4 || tradeDetails.value.transaction_status == 7){
+                tradeDetails.value.editable = true 
+                console.log(tradeDetails.value.editable);
+                
             }else{
                 tradeDetails.value.editable = false
             }
@@ -218,7 +223,8 @@ export default defineComponent({
                 paid_naira_amount: tradeDetails.value.paid_naira_amount,
                 amount_received: tradeDetails.value.amount_received,
                 hash_key: tradeDetails.value.hash_key,
-                hash_key_type: tradeDetails.value.hash_key_type
+                hash_key_type: tradeDetails.value.hash_key_type,
+                editable: tradeDetails.value.editable
             }
             const buyFormData = {
                 coin_amount:tradeDetails.value.coin_amount,
@@ -227,11 +233,10 @@ export default defineComponent({
                 comment: tradeDetails.value.comment,
                 transaction_status: tradeDetails.value.transaction_status,
                 hash_key: tradeDetails.value.hash_key,
-                hash_key_type: tradeDetails.value.hash_key_type
+                hash_key_type: tradeDetails.value.hash_key_type,
+                editable: tradeDetails.value.editable
             }
-            
-        
-            
+             
             try {
                 if(tradeDetails.value.trade_type == 'SELL'){
                     
@@ -247,7 +252,6 @@ export default defineComponent({
                         
                     })
                 } else {
-                    console.log(buyFormData);
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, buyFormData)
                     .then(res => {
                         Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
@@ -257,8 +261,6 @@ export default defineComponent({
                 }
               
             }catch(e){
-                console.log(e);
-                
                 alert('An error occured please contact admin') 
             } 
         }

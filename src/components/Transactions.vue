@@ -8,9 +8,10 @@
                         <td>REFERENCE</td>
                         <td>STATUS</td>
                         <td>TRANSACTION TYPE</td>
-                        <td>AMOUNT</td>
+                        <td>ASSET</td>
                         <td>COIN RECEIVED</td>
-                        <td>NAIRA AMOUNT</td>
+                        <td> AMOUNT RECEIVED(₦)</td>
+                        <td> AMOUNT PAID(₦)</td>
                         <td>DATE</td>
                         <td>PAYMENT</td>
                         <td>ACTION</td>
@@ -36,6 +37,7 @@
                         </td>
                         <td>{{transaction.coin_amount}}</td>
                         <td>₦{{transaction.naira_amount}}</td>
+                        <td>₦{{transaction.paid_naira_amount}}</td>
                         <td> {{transaction.date}}</td>
                         <td v-if="transaction.trade_type === 'SELL'">
                             {{transaction.bank.account_number}} {{transaction.bank.account_name}}

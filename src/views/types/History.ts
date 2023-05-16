@@ -11,6 +11,7 @@ interface Transaction {
     date: string,
     dollar_amount: number,
     naira_amount: number,
+    paid_naira_amount: number,
     pm_account: string,
     trade_type: string,
     transaction_reference: string,
