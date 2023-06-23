@@ -58,6 +58,13 @@
                             </a>
                         </router-link>
                     </li>
+                    <li>
+                        <router-link :to="'/bonus'">
+                            <a  data-toggle="tooltip" data-placement="right" title="Campaign">
+                                <span><i class="fa fa-check"></i></span>
+                            </a>
+                        </router-link>
+                    </li>
                     <li style="margin-top:7px; margin-left:4px">
                         <a  data-toggle="tooltip" data-placement="right" title="Logout" @click="logout()">
                                 <span><i class="las la-power-off"></i></span>

@@ -90,23 +90,17 @@
                                                     <option value="2">Text</option>
                                                 </select>
                                             </div>
-                                          
-                                            <!-- <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'">
-                                                <label class="me-sm-2">Bank Name</label>
-                                                <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
+                                            <div class="mb-3 col-xl-6" >
+                                                <label class="me-sm-2">Campaign Bonus</label>
+                                                <input type="text" class="form-control" v-model="tradeDetails.campaign_bonus" disabled/>
                                             </div>
-                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
-                                                <label class="me-sm-2">Account Number</label>
-                                                <input type="text" class="form-control" v-model="bankDetails.account_number" :disabled="tradeDetails.editable"/>
-                                            </div>
-                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
-                                                <label class="me-sm-2">Account Name</label>
-                                                <input type="text" class="form-control" v-model="bankDetails.bank_name" :disabled="tradeDetails.editable"/>
-                                            </div> -->
+                                        
                                             <div class="mb-3 col-xl-12">
                                                 <label class="me-sm-2">Comment</label>
                                                 <textarea  class="form-control" v-model="tradeDetails.comment" :disabled="tradeDetails.editable"/>
                                             </div>
+
+                                           
                                        
                                             <div v-if="tradeDetails.editable == false">
                                                 <button class="btn btn-success waves-effect">Save</button>
@@ -159,7 +153,8 @@ export default defineComponent({
             paid_naira_amount: 0 as number,
             hash_key_type: '2' as string,
             editable: false as boolean,
-            pm_account: '' as string
+            pm_account: '' as string,
+            campaign_bonus: false as boolean
         })
 
         const bankDetails = ref({
@@ -190,7 +185,7 @@ export default defineComponent({
             tradeDetails.value.trade_type = selected[0].trade_type
             tradeDetails.value.pm_account = selected[0].pm_account
             tradeDetails.value.editable = selected[0].editable
-            console.log(tradeDetails.value.editable);
+            tradeDetails.value.campaign_bonus = selected[0].campaign_bonus
             
             if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money"){
                 bankDetails.value.bank_name = selected[0].bank.bank_name

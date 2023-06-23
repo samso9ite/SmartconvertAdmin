@@ -161,8 +161,6 @@
                     
                 }
                 try {
-                    console.log(formData);
-                    
                     await Api.axios_instance.post(Api.baseUrl+('api/v1/create-coin'), formData)
                     .then(res => {
                         router.push({path:'/rates'})

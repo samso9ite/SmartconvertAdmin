@@ -23,9 +23,9 @@
                                                         <h4 style="margin-bottom:15px">  {{testimonial.message}}
                                                         </h4>
                                                         
-                                                        <span style="color:green; font-size: 17px; font-weight: 600; cursor: pointer;  background-color: aliceblue; padding:8px; border-radius: 10px; "  @click="updateTestimonial({reference:testimonial.reference, status:true})" v-if="testimonial.status == false">Approve</span>
+                                                        <span style="color:green; font-size: 17px; font-weight: 600; cursor: pointer;  background-color: aliceblue; padding:8px; border-radius: 10px; "  @click="updateTestimonial({reference:testimonial.reference, status:false})" v-if="testimonial.status == false">Approve</span>
                                                         
-                                                        <span style="color:red; font-size: 17px; font-weight: 600; cursor: pointer; background-color: aliceblue; padding:8px; border-radius: 10px" @click="updateTestimonial({reference:testimonial.reference, status:false})" v-if="testimonial.status == true">Disapprove</span>
+                                                        <span style="color:red; font-size: 17px; font-weight: 600; cursor: pointer; background-color: aliceblue; padding:8px; border-radius: 10px" @click="updateTestimonial({reference:testimonial.reference, status:true})" v-if="testimonial.status == true">Disapprove</span>
                                                     </div>
                                                     <div id="btcChart"></div>
                                             </div>

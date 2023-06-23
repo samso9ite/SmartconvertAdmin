@@ -11,6 +11,7 @@ import TradeUpdate from '../views/TradeUpdate.vue'
 import VerifyUser from '../views/VerifyUser.vue'
 import Bank from '../views/Bank.vue'
 import CreateCoin from '../views/CreateCoin.vue'
+import Bonus from '../views/Bonus.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -90,10 +91,17 @@ const routes: Array<RouteRecordRaw> = [
     props: true,
     meta: {requiresAuth: true}
   },
+  {
+    path: '/bonus',
+    name: 'Bonus',
+    component: Bonus,
+    props: true,
+    meta: {requiresAuth: true}
+  },
 
 
   // {
-  //   path: '/',
+  //   path: '/',s  
   //   name: 'VerifyUser',
   //   component: VerifyUser,
   //   props: true,
