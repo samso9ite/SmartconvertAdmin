@@ -154,7 +154,7 @@ export default defineComponent({
                         const all_transactions = transactions.value = res.data
                         store.commit('storeTransactions', {all_transactions:res.data})
                         all_transactions.forEach((transaction: { naira_amount: number, transaction_status:string }) => {
-                            if (transaction.transaction_status  == '2'){
+                            if (transaction.transaction_status  === '2' || transaction.transaction_status === '7'){
                                 transacted_amount += transaction.naira_amount}
                         })
                         total_transacted.value = transacted_amount
