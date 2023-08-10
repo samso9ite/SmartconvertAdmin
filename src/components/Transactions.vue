@@ -7,10 +7,10 @@
                         <td><span class="sold-thumb"><i class="la la-arrow-down"></i></span></td>
                         <td>REFERENCE</td>
                         <td>STATUS</td>
-                        <td>TRANSACTION TYPE</td>
+                        <td> TYPE</td>
                         <td>ASSET</td>
-                        <td>COIN RECEIVED</td>
-                        <td> AMOUNT RECEIVED(₦)</td>
+                        <td>COIN</td>
+                        <td> AMOUNT ENTERED(₦)</td>
                         <td> AMOUNT PAID(₦)</td>
                         <td>DATE</td>
                         <td>PAYMENT</td>
