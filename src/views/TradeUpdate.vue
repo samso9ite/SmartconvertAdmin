@@ -12,8 +12,11 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade </h4><br>
-
-                                    <h5> <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span></h5>
+                                    
+                                    <h5> 
+                                        <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span>
+                                        <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
+                                    </h5>
                                 </div>
                                 <div class="card-body">
                                     <form @submit.prevent="updateTransaction">
@@ -100,8 +103,6 @@
                                                 <textarea  class="form-control" v-model="tradeDetails.comment" :disabled="tradeDetails.editable"/>
                                             </div>
 
-                                           
-                                       
                                             <div v-if="tradeDetails.editable == false">
                                                 <button class="btn btn-success waves-effect">Save</button>
                                             </div>
@@ -154,10 +155,16 @@ export default defineComponent({
             hash_key_type: '2' as string,
             editable: false as boolean,
             pm_account: '' as string,
-            campaign_bonus: false as boolean
+            campaign_bonus: false as boolean,
+            bonus_bank: {}
         })
 
         const bankDetails = ref({
+            bank_name: '' as string,
+            account_number: '' as string,
+            account_name: '' as string
+        })
+        const bonusBankDetails = ref({
             bank_name: '' as string,
             account_number: '' as string,
             account_name: '' as string
@@ -186,6 +193,9 @@ export default defineComponent({
             tradeDetails.value.pm_account = selected[0].pm_account
             tradeDetails.value.editable = selected[0].editable
             tradeDetails.value.campaign_bonus = selected[0].campaign_bonus
+            bonusBankDetails.value.bank_name = selected[0].bonus_bank.bank_name
+            bonusBankDetails.value.account_number = selected[0].bonus_bank.account_number
+            bonusBankDetails.value.account_name = selected[0].bonus_bank.account_name
             
             if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money"){
                 bankDetails.value.bank_name = selected[0].bank.bank_name
@@ -199,8 +209,6 @@ export default defineComponent({
 
         /* Update Trade Details */
         const updateTransaction = async () => {
-            console.log(tradeDetails.value.transaction_status);
-            
             if(tradeDetails.value.transaction_status == 2 || tradeDetails.value.transaction_status == 4 || tradeDetails.value.transaction_status == 7){
                 tradeDetails.value.editable = true 
                 console.log(tradeDetails.value.editable);
@@ -264,7 +272,7 @@ export default defineComponent({
             setTradeValues()
         })
 
-        return {setTradeValues, tradeDetails, updateTransaction, bankDetails}
+        return {setTradeValues, tradeDetails, updateTransaction, bankDetails, bonusBankDetails}
       },
 })
 </script>

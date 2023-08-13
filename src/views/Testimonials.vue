@@ -22,18 +22,15 @@
                                                         </div>
                                                         <h4 style="margin-bottom:15px">  {{testimonial.message}}
                                                         </h4>
-                                                        
                                                         <span style="color:green; font-size: 17px; font-weight: 600; cursor: pointer;  background-color: aliceblue; padding:8px; border-radius: 10px; "  @click="updateTestimonial({reference:testimonial.reference, status:false})" v-if="testimonial.status == false">Approve</span>
-                                                        
                                                         <span style="color:red; font-size: 17px; font-weight: 600; cursor: pointer; background-color: aliceblue; padding:8px; border-radius: 10px" @click="updateTestimonial({reference:testimonial.reference, status:true})" v-if="testimonial.status == true">Disapprove</span>
                                                     </div>
                                                     <div id="btcChart"></div>
                                             </div>
-                                            
+                                                  
                                         </div>
                                     </div>
                                 </div>
-
                                 </div>
                             </div>
                             </div>
@@ -51,9 +48,6 @@ import Footer from '../components/Footer.vue'
 import { useStore } from 'vuex'
 import Api from './Api'
 import { onMounted } from 'vue'
-import { reactive } from 'vue'
-import { useRoute } from 'vue-router'
-import { notify } from "@kyvg/vue3-notification";
 
 export default defineComponent({
     name: "Testimonials",
@@ -69,17 +63,15 @@ export default defineComponent({
                     .then(res => {
                         testimonials.value = res.data
                         store.commit('storeTestimonials', {testimonials_list:res.data})
-                        })
+                    })
             } catch(e){
                 console.log("There's an error");
             }
         }
         const updateTestimonial = (params:any) => {
-            console.log(params);
-            
             try {
                 let formData = {
-                    status: params.status
+                    status: !params.status
                 }
                 Api.axios_instance.patch(Api.baseUrl+'api/v1/update-testimonial/'+params.reference, formData)
                 .then(res => {
@@ -93,8 +85,7 @@ export default defineComponent({
         onMounted(() =>{
             getTestimonials()
         })
-
-        return {getTestimonials, testimonials, updateTestimonial}
+    return {getTestimonials, testimonials, updateTestimonial}
     },
 })
 </script>

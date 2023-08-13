@@ -11,6 +11,8 @@ import TradeUpdate from '../views/TradeUpdate.vue'
 import VerifyUser from '../views/VerifyUser.vue'
 import Bank from '../views/Bank.vue'
 import CreateCoin from '../views/CreateCoin.vue'
+import CreateNetwork from '../views/CreateNetwork.vue'
+import EditNetwork from '../views/EditNetwork.vue'
 import Bonus from '../views/Bonus.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -89,6 +91,18 @@ const routes: Array<RouteRecordRaw> = [
     name: 'CreateCoin',
     component: CreateCoin,
     props: true,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/add-network',
+    name: 'CreateNetwork',
+    component: CreateNetwork,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/edit-network/:id/:network/:coin',
+    name: 'EditNetwork',
+    component:EditNetwork,
     meta: {requiresAuth: true}
   },
   {

@@ -50,35 +50,57 @@
                                                 <label class="me-sm-2">Maximum Sell Limit</label>
                                                 <input type="text" class="form-control" v-model="coin.maximum_sell_limit">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">First Address</label>
-                                                <input type="text" class="form-control" v-model="coin.first_address">
-                                            </div>
-                                            <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">Second Address</label>
-                                                <input type="text" class="form-control" v-model="coin.second_address">
-                                            </div>
-                                            <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">Third Address</label>
-                                                <input type="text" class="form-control" v-model="coin.third_address">
-                                            </div>
-                                            <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">Fourth Address</label>
-                                                <input type="text" class="form-control" v-model="coin.fourth_address">
-                                            </div>
-                                            <div class="mb-3 col-xl-6">
-                                                <label class="me-sm-2">Fifth Address</label>
-                                                <input type="text" class="form-control" v-model="coin.fifth_address">
-                                            </div>
                                            
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Sell Active Status</label>
                                                 <input type="checkbox" class="form-check-input" v-model="coin.coin_sell_status">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Buy Active Status</label>
                                                 <input type="checkbox" class="form-check-input" v-model="coin.coin_buy_status">
                                             </div>
+                                            <div class="mb-3 col-xl-4">
+                                                <label class="me-sm-2">Has Different Networks</label>
+                                                <input type="checkbox" class="form-check-input" v-model="coin.has_networks">
+                                            </div>
+                                            <div class="card-header mb-4">
+                                                    <h4 class="card-title">Networks</h4>
+                                            </div>   
+                                           <span v-if="coin.has_networks">
+                                            <div class="mb-3 col-xl-10" v-for="network in networks" :key="network">
+                                                <h3> {{ network.network_name }} <router-link :to="'/edit-network/'+network.id+'/'+network.network_name+'/'+coin.coin_name"> <i class="fa fa-pencil"></i></router-link></h3><br>   
+                                                <div class="row">
+                                                    <div class="mb-3 col-xl-4 col-md-4"> <label class="me-sm-2">{{ network.first_address }} </label></div>
+                                                    <div class="mb-3 col-xl-4 col-md-4">  <label class="me-sm-2">{{ network.second_address }}</label> </div>
+                                                    <div class="mb-3 col-xl-4 col-md-4"> <label class="me-sm-2">{{ network.third_address }}</label></div>
+                                                </div>      
+                                              
+                                                <br>
+                                            </div>
+                                           </span>
+                                              
+                                            <span v-else>
+                                                <div class="mb-3 col-xl-6">
+                                                <label class="me-sm-2">First Address</label>
+                                                <input type="text" class="form-control" v-model="coin.first_address">
+                                                </div>
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Second Address</label>
+                                                    <input type="text" class="form-control" v-model="coin.second_address">
+                                                </div>
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Third Address</label>
+                                                    <input type="text" class="form-control" v-model="coin.third_address">
+                                                </div>
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Fourth Address</label>
+                                                    <input type="text" class="form-control" v-model="coin.fourth_address">
+                                                </div>
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Fifth Address</label>
+                                                    <input type="text" class="form-control" v-model="coin.fifth_address">
+                                                </div>
+                                            </span>
                                             <div class="col-12">
                                                 <button class="btn btn-success waves-effect" type="submit">Save</button>
                                             </div>
@@ -114,7 +136,9 @@ export default defineComponent({
         const route = useRoute()
         const router = useRouter()
         const id = route.params.reference
+        const networks = ref<any>([])
         const coin = ref({
+            coin_id: 0 as number,
             coin_name:'' as string,
             coin_description: '' as string,
             buy_rate: 0 as number,
@@ -131,12 +155,22 @@ export default defineComponent({
             second_address: '' as string,
             third_address: '' as string,
             fourth_address: '' as string,
-            fifth_address: '' as string
+            fifth_address: '' as string,
+            has_networks: false as boolean,
+        })
+        const network = ref({
+            coin_id: 0 as number,
+            network_name: '' as string,
+            first_address: '' as string,
+            second_address: '' as string,
+            third_address: '' as string,
         })
         const fillDetails = () => {
             const allCoin = ref<any>(store.state.all_coin)
             const selectedCoin = allCoin.value.filter((coin:any) => coin.unique_id == id)
-            console.log(selectedCoin);
+            network.value.coin_id = selectedCoin[0].id
+            coin.value.coin_id = selectedCoin[0].id
+            console.log(network.value.coin_id);
             
             coin.value.coin_description = selectedCoin[0].coin_description
             coin.value.coin_name = selectedCoin[0].coin_name
@@ -155,6 +189,8 @@ export default defineComponent({
             coin.value.third_address = selectedCoin[0].third_address
             coin.value.fourth_address = selectedCoin[0].fourth_address
             coin.value.fifth_address = selectedCoin[0].fifth_address
+            coin.value.has_networks = selectedCoin[0].has_networks
+           
         }
         const updateCoin = async () => {
             const formData = {
@@ -174,7 +210,8 @@ export default defineComponent({
                 second_address: coin.value.second_address,
                 third_address: coin.value.third_address,
                 fourth_address: coin.value.fourth_address,
-                fifth_address: coin.value.fifth_address
+                fifth_address: coin.value.fifth_address,
+                has_networks: coin.value.has_networks
             }
             try {
                 await Api.axios_instance.patch(Api.baseUrl+('api/v1/update-coin/'+id), formData)
@@ -185,12 +222,32 @@ export default defineComponent({
             }catch(e){
                alert("An error occured, pleae contact admin")
             }
+            updateNetwork()
+        }
+        const getNetwork = async () => {
+            Api.axios_instance.get(Api.baseUrl+'api/v1/list-networks/'+network.value.coin_id)
+            .then(res => {
+                networks.value = res.data
+            })
+        }
+        const updateNetwork = async () => {
+            const formData = {
+                network_name: network.value.network_name,
+                first_address: network.value.first_address,
+                second_address: network.value.second_address,
+                third_address: network.value.third_address
+            }
+            Api.axios_instance.patch(Api.baseUrl+'api/v1/update-network/'+network.value.coin_id, formData)
+            .then(res => {
+                console.log(res.data); 
+            })
         }
 
         onMounted(() => {
             fillDetails()
+            getNetwork()
         })
-        return {coin, updateCoin}
+        return {coin, updateCoin, updateNetwork, network, getNetwork, networks}
     },
 })
 </script>

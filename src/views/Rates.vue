@@ -36,6 +36,7 @@
 
                         <div class="col-12">
                            <router-link :to="'/add-coin'"><button class="btn btn-success waves-effect" type="submit">Create New Coin</button> </router-link>
+                           <router-link :to="'/add-network'" style="padding-left:5%"><button class="btn btn-success waves-effect" type="submit">Create New Network</button> </router-link>
                         </div>
                     </div>
                 </div>
