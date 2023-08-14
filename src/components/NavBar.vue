@@ -30,7 +30,7 @@
                         </router-link>
                     </li>
                    
-                    <li>
+                    <li v-if="adminEmail === 'info@smartconvert.ng'">
                         <router-link :to="'/users'">
                             <a title="All Users">
                                 <span><i class="la la-user"></i></span>
@@ -44,7 +44,7 @@
                             </a>
                         </router-link>
                     </li>
-                    <li>
+                    <li  v-if="adminEmail === 'info@smartconvert.ng'">
                         <router-link :to="'/add-bank'">
                             <a  title="Banks">
                                 <span><i class="fa fa-bank" style="font-size: 18px"></i></span>
@@ -58,7 +58,7 @@
                             </a>
                         </router-link>
                     </li>
-                    <li>
+                    <li  v-if="adminEmail === 'info@smartconvert.ng'">
                         <router-link :to="'/bonus'">
                             <a  data-toggle="tooltip" data-placement="right" title="Campaign">
                                 <span><i class="fa fa-check"></i></span>
@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -100,8 +100,14 @@ export default defineComponent({
             window.localStorage.clear();
             router.push({path:'/sign-in'})
         }
-
-        return{logout}
+        let adminEmail = ref<any>('')
+        const getAdminEmail = () => {
+            adminEmail = sessionStorage.getItem('email')
+        }
+        onMounted(() => {
+          getAdminEmail()
+        })
+        return{logout, adminEmail}
     },
 })
 </script>

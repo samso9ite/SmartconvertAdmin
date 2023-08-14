@@ -55,6 +55,28 @@
                                                     <label class="me-sm-2">Maximum Sell Limit</label>
                                                     <input type="text" class="form-control" v-model="coin.maximum_sell_limit" required>
                                                 </div>
+                                                <!-- <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Image</label>
+                                                    <input type="file" class="form-control" v-model="coin.image" required>
+                                                </div> -->
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Sell Active Status</label>
+                                                    <input type="checkbox" class="form-check-input" v-model="coin.coin_sell_status">
+                                                </div>
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Buy Active Status</label>
+                                                    <input type="checkbox" class="form-check-input" v-model="coin.coin_buy_status">
+                                                </div>
+
+                                                <div class="card-header mb-4">
+                                                    <h4 class="card-title">Networks</h4>
+                                                </div>                                   
+                                                <div class="mb-3 col-xl-6">
+                                                    <label class="me-sm-2">Has Different Networks</label>
+                                                    <input type="checkbox" class="form-check-input" v-model="coin.has_networks">
+                                                </div>
+
+                                                <span class="row" v-if="coin.has_networks  == false">
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">First Address</label>
                                                     <input type="text" class="form-control" v-model="coin.first_address" required>
@@ -76,30 +98,7 @@
                                                     <input type="text" class="form-control" v-model="coin.fifth_address">
                                                 </div>
                                                
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Sell Active Status</label>
-                                                    <input type="checkbox" class="form-check-input" v-model="coin.coin_sell_status">
-                                                </div>
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Buy Active Status</label>
-                                                    <input type="checkbox" class="form-check-input" v-model="coin.coin_buy_status">
-                                                </div>
-
-                                                <div class="card-header mb-4">
-                                                    <h4 class="card-title">Networks</h4>
-                                                </div>                                   
-                                                <!-- <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">First Network</label>
-                                                    <input type="text" class="form-control" v-model="coin.first_network">
-                                                </div>
-                                                <div class="mb-3 col-xl-6 ">
-                                                    <label class="me-sm-2">Second Network</label>
-                                                    <input type="text" class="form-control" v-model="coin.second_network">
-                                                </div> -->
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Has Different Networks</label>
-                                                    <input type="checkbox" class="form-check-input" v-model="coin.has_networks">
-                                                </div>
+                                                </span>
                                                 <div class="col-12">
                                                     <button class="btn btn-success waves-effect" type="submit">Save</button>
                                                 </div>
@@ -153,6 +152,7 @@
                 third_address: '' as string,
                 fourth_address: '' as string,
                 fifth_address: '' as string,
+                // image: '' as any,
                 has_networks: false as boolean,
             })
       
@@ -187,9 +187,6 @@
                    alert("An error occured, please contact admin")
                 }
             }
-            // onMounted(() => {
-            //     fillDetails()
-            // })
         return {coin, createCoin}
     },
 })

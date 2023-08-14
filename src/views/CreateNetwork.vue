@@ -94,6 +94,10 @@ export default defineComponent({
             Api.axios_instance.post(Api.baseUrl+('api/v1/create-network'), formData)
             .then(res => {
                 alert("Network Has Been Created")
+                network.value.network_name = ''
+                network.value.first_address = ''
+                network.value.second_address = ''
+                network.value.third_address = ''
             })
         }
         return{network, createNetwork, allCoin}

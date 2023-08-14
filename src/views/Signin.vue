@@ -70,6 +70,9 @@ export default defineComponent({
                         const access = res.data.access
                         sessionStorage.setItem('access', access)
                         sessionStorage.setItem('isAuthenticated', 'true')
+                        console.log(email.value);
+                        
+                        sessionStorage.setItem('email', email.value)
                         router.push("/")
                     })
                 } catch(e){

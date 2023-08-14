@@ -149,7 +149,6 @@ export default defineComponent({
             try{ 
                 await  Api.axios_instance.get(Api.baseUrl+'api/v1/list-all-transactions')
                     .then(res => { 
-                        console.log(res);
                         let transacted_amount = 0
                         const all_transactions = transactions.value = res.data
                         store.commit('storeTransactions', {all_transactions:res.data})
@@ -228,8 +227,6 @@ export default defineComponent({
                 
             })
             const all_transactions:any = transactions.value
-            console.log(all_transactions);
-            
             let pending_transactions =  all_transactions.filter((transaction:any) => transaction.transaction_status == '1' && transaction.trade_type == 'SELL' && transaction.coin.coin_name == 'Bitcoin')
             let awaiting_confirmation = all_transactions.filter((transaction:any) => transaction.transaction_status == '6' && transaction.trade_type == 'SELL' && transaction.coin.coin_name == 'Bitcoin')
             let uncomplete_transactions = pending_transactions.concat(awaiting_confirmation)
