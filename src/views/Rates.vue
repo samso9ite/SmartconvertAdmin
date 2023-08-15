@@ -36,7 +36,7 @@
 
                         <div class="col-12">
                            <router-link :to="'/add-coin'"><button class="btn btn-success waves-effect" type="submit">Create New Coin</button> </router-link>
-                           <router-link :to="'/add-network'" style="padding-left:5%"><button class="btn btn-success waves-effect" type="submit">Create New Network</button> </router-link>
+                           <router-link :to="'/add-network'" style="padding-left:5%" v-if="adminEmail === 'info@smartconvert.ng'"><button class="btn btn-success waves-effect" type="submit">Create New Network</button> </router-link>
                         </div>
                     </div>
                 </div>
@@ -62,6 +62,11 @@ export default defineComponent({
     setup() {
         const rates = ref<Coin[]>([])
         const store = useStore()
+        let adminEmail = ref<any>('')
+
+        const getAdminEmail = () => {
+            adminEmail.value =  sessionStorage.getItem('email')
+        }
         /* Get all coins from the database */
         const getCoins = async() => {
         try {
@@ -69,7 +74,6 @@ export default defineComponent({
                 .then(res => {
                     rates.value = res.data
                     store.commit('storeCoins', {all_coin:res.data})
-                    console.log(store.state.all_coin);
                     })
         } catch(e){
             console.log("There's an error");
@@ -77,9 +81,10 @@ export default defineComponent({
     }
 
     onMounted (() => {
-        getCoins()
+        getCoins();
+        getAdminEmail()
     })
-    return {getCoins, rates}
+    return {getCoins, rates, adminEmail}
     },
 
 })

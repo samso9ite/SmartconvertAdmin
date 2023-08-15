@@ -14,6 +14,7 @@ import CreateCoin from '../views/CreateCoin.vue'
 import CreateNetwork from '../views/CreateNetwork.vue'
 import EditNetwork from '../views/EditNetwork.vue'
 import Bonus from '../views/Bonus.vue'
+// import ChangePassword from '../views/ChangePassword'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -56,7 +57,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/change-password',
     name: 'ChangePassword',
     component: ChangePassword,
-    meta: {guest: true}
+    meta: {requiresAuth: true}
   },
   {
     path: '/sign-in',
@@ -112,16 +113,6 @@ const routes: Array<RouteRecordRaw> = [
     props: true,
     meta: {requiresAuth: true}
   },
-
-
-  // {
-  //   path: '/',s  
-  //   name: 'VerifyUser',
-  //   component: VerifyUser,
-  //   props: true,
-  //   meta: {requiresAuth: true}
-  // },
-
 ]
 
 const router = createRouter({

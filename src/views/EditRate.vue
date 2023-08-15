@@ -64,17 +64,16 @@
                                                 <input type="checkbox" class="form-check-input" v-model="coin.has_networks">
                                             </div>
                                             <div class="card-header mb-4">
-                                                    <h4 class="card-title">Networks</h4>
+                                                    <h4 class="card-title">Networks </h4>
                                             </div>   
                                            <span v-if="coin.has_networks">
                                             <div class="mb-3 col-xl-10" v-for="network in networks" :key="network">
-                                                <h3> {{ network.network_name }} <router-link :to="'/edit-network/'+network.id+'/'+network.network_name+'/'+coin.coin_name"> <i class="fa fa-pencil"></i></router-link></h3><br>   
+                                                <h3> {{ network.network_name }} <router-link :to="'/edit-network/'+network.id+'/'+network.network_name+'/'+coin.coin_name"  v-if="adminEmail === 'infosmartconvert.ng'"> <i class="fa fa-pencil"></i></router-link></h3><br>   
                                                 <div class="row">
                                                     <div class="mb-3 col-xl-4 col-md-4"> <label class="me-sm-2">{{ network.first_address }} </label></div>
                                                     <div class="mb-3 col-xl-4 col-md-4">  <label class="me-sm-2">{{ network.second_address }}</label> </div>
                                                     <div class="mb-3 col-xl-4 col-md-4"> <label class="me-sm-2">{{ network.third_address }}</label></div>
                                                 </div>      
-                                              
                                                 <br>
                                             </div>
                                            </span>
@@ -124,7 +123,6 @@ import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import Api from './Api'
 import { useStore } from 'vuex'
-import Coin from './types/Coin'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 
@@ -137,6 +135,12 @@ export default defineComponent({
         const router = useRouter()
         const id = route.params.reference
         const networks = ref<any>([])
+        let adminEmail = ref<any>('')
+
+        const getAdminEmail = () => {
+            adminEmail.value =  sessionStorage.getItem('email')
+        }
+
         const coin = ref({
             coin_id: 0 as number,
             coin_name:'' as string,
@@ -170,8 +174,6 @@ export default defineComponent({
             const selectedCoin = allCoin.value.filter((coin:any) => coin.unique_id == id)
             network.value.coin_id = selectedCoin[0].id
             coin.value.coin_id = selectedCoin[0].id
-            console.log(network.value.coin_id);
-            
             coin.value.coin_description = selectedCoin[0].coin_description
             coin.value.coin_name = selectedCoin[0].coin_name
             coin.value.buy_rate = selectedCoin[0].buy_rate
@@ -244,10 +246,11 @@ export default defineComponent({
         }
 
         onMounted(() => {
-            fillDetails()
-            getNetwork()
+            fillDetails();
+            getNetwork();
+            getAdminEmail()
         })
-        return {coin, updateCoin, updateNetwork, network, getNetwork, networks}
+        return {coin, updateCoin, updateNetwork, network, getNetwork, networks, adminEmail}
     },
 })
 </script>

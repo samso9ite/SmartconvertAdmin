@@ -134,6 +134,7 @@
             const route = useRoute()
             const router = useRouter()
             const id = route.params.reference
+       
             const coin = ref({
                 coin_name:'' as string,
                 coin_description: '' as string,
@@ -187,6 +188,8 @@
                    alert("An error occured, please contact admin")
                 }
             }
+
+         
         return {coin, createCoin}
     },
 })

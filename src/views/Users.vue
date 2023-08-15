@@ -7,7 +7,9 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0">
-                            <h4 class="card-title">All Users {{users.length}}</h4>
+                            <h4 class="card-title">All Users {{users.length}} <span style="float:right"> <a href="" class="nav-link">
+                                    <i class="la la-lock"></i>
+                                     </a></span> </h4>
                         </div>
                         <div class="buy-sell-widget" width="30%">
                                 <br>

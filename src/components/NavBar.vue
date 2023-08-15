@@ -7,8 +7,10 @@
                         <nav class="navbar navbar-expand-lg navbar-light px-0 justify-content-between">
                             <a class="navbar-brand" href="index-2.html"><img src="images/w_logo.png" alt="">
                                 <span>SmartConvert</span></a>
-
-
+                                <span style="font-size:30px; color:white">
+                                    <router-link :to="'/change-password'" >  <i class="la la-lock"></i> </router-link>
+                                    
+                                    </span>
                             <div class="dashboard_log my-2">
                                 <div class="d-flex align-items-center">
                                 </div>
@@ -31,9 +33,9 @@
                     </li>
                    
                     <li v-if="adminEmail === 'info@smartconvert.ng'">
-                        <router-link :to="'/users'">
+                        <router-link :to="'/users'" >
                             <a title="All Users">
-                                <span><i class="la la-user"></i></span>
+                                <span><i class="la la-user"></i> </span>
                             </a>
                         </router-link>
                     </li>
@@ -44,8 +46,8 @@
                             </a>
                         </router-link>
                     </li>
-                    <li  v-if="adminEmail === 'info@smartconvert.ng'">
-                        <router-link :to="'/add-bank'">
+                    <li >
+                        <router-link :to="'/add-bank'" v-if="adminEmail === 'info@smartconvert.ng'">
                             <a  title="Banks">
                                 <span><i class="fa fa-bank" style="font-size: 18px"></i></span>
                             </a>
@@ -58,13 +60,14 @@
                             </a>
                         </router-link>
                     </li>
-                    <li  v-if="adminEmail === 'info@smartconvert.ng'">
-                        <router-link :to="'/bonus'">
+                    <li>
+                        <router-link :to="'/bonus'" v-if="adminEmail === 'info@smartconvert.ng'">
                             <a  data-toggle="tooltip" data-placement="right" title="Campaign">
                                 <span><i class="fa fa-check"></i></span>
                             </a>
                         </router-link>
                     </li>
+                    
                     <li style="margin-top:7px; margin-left:4px">
                         <a  data-toggle="tooltip" data-placement="right" title="Logout" @click="logout()">
                                 <span><i class="las la-power-off"></i></span>
@@ -102,7 +105,7 @@ export default defineComponent({
         }
         let adminEmail = ref<any>('')
         const getAdminEmail = () => {
-            adminEmail = sessionStorage.getItem('email')
+            adminEmail.value = sessionStorage.getItem('email')
         }
         onMounted(() => {
           getAdminEmail()
