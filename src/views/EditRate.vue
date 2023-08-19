@@ -68,7 +68,7 @@
                                             </div>   
                                            <span v-if="coin.has_networks">
                                             <div class="mb-3 col-xl-10" v-for="network in networks" :key="network">
-                                                <h3> {{ network.network_name }} <router-link :to="'/edit-network/'+network.id+'/'+network.network_name+'/'+coin.coin_name"  v-if="adminEmail === 'infosmartconvert.ng'"> <i class="fa fa-pencil"></i></router-link></h3><br>   
+                                                <h3> {{ network.network_name }} <router-link :to="'/edit-network/'+network.id+'/'+network.network_name+'/'+coin.coin_name"  v-if="adminEmail === 'info@smartconvert.ng'"> <i class="fa fa-pencil"></i></router-link></h3><br>   
                                                 <div class="row">
                                                     <div class="mb-3 col-xl-4 col-md-4"> <label class="me-sm-2">{{ network.first_address }} </label></div>
                                                     <div class="mb-3 col-xl-4 col-md-4">  <label class="me-sm-2">{{ network.second_address }}</label> </div>
@@ -81,23 +81,28 @@
                                             <span v-else>
                                                 <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">First Address</label>
-                                                <input type="text" class="form-control" v-model="coin.first_address">
+                                                <input type="text" class="form-control" v-model="coin.first_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                <input type="text" class="form-control" v-model="coin.first_address"  v-else disabled>
                                                 </div>
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">Second Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.second_address">
+                                                    <input type="text" class="form-control" v-model="coin.second_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                    <input type="text" class="form-control" v-model="coin.second_address" disabled v-else>
                                                 </div>
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">Third Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.third_address">
+                                                    <input type="text" class="form-control" v-model="coin.third_address" v-if="adminEmail === 'info@smartconvert.ng'">
+                                                    <input type="text" class="form-control" v-model="coin.third_address" disabled v-else >
                                                 </div>
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">Fourth Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.fourth_address">
+                                                    <input type="text" class="form-control" v-model="coin.fourth_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                    <input type="text" class="form-control" v-model="coin.fourth_address" disabled v-else>
                                                 </div>
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">Fifth Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.fifth_address">
+                                                    <input type="text" class="form-control" v-model="coin.fifth_address" v-if="adminEmail === 'info@smartconvert.ng'">
+                                                    <input type="text" class="form-control" v-model="coin.fifth_address" disabled v-else>
                                                 </div>
                                             </span>
                                             <div class="col-12">
