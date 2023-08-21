@@ -2,9 +2,8 @@ interface Transaction {
     id: number,
     amount_received: number,
     bank: {account_name:string, account_number?:string, bank_name:string},
-    // bank: any
     buy_payment_mode: string,
-    coin: {'coin_name':string, 'coin_code':string},
+    coin: {'coin_name':string, 'coin_code':string, 'image':any},
     coin_address: string,
     coin_amount: string,
     comment: string,

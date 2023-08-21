@@ -7,7 +7,8 @@ interface Coin {
     buy_rate:number,
     minimum_limit:number,
     maximum_limit:number,
-    unique_id:string
+    unique_id:string,
+    image: any
 }
 
 export default Coin

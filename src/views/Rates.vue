@@ -19,6 +19,7 @@
                                                 <li class="d-flex" >
                                                     <i class="cc BTC" v-if="rate.coin_name === 'Bitcoin'"></i> <i class="cc TX" v-if="rate.coin_name === 'TRON'"></i> <img src="../../public/assets/images/perfect-money-logo.png" width="38px" v-if="rate.coin_name === 'Perfect Money'"/><i class="cc ETH"  v-if="rate.coin_name == 'Ethereum'"></i><i class="cc LTC"  v-if="rate.coin_name == 'LiteCoin'"></i><i class="cc DOGE"  v-if="rate.coin_name == 'Doge Coin'">
                                                     </i><i class="cc USDT-alt" v-if="rate.coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="rate.coin_name == 'Ripple'"></i>
+                                                    <img :src=rate.image width="40" class="rounded-circle" v-else/>
                                                     <div class="flex-grow-1">
                                                         <h5 class="m-0" style="margin-left:10px !important"> {{rate.coin_name}}</h5>
                                                     </div>
