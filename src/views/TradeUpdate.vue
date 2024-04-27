@@ -34,9 +34,17 @@
                                                 <label class="me-sm-2">Asset</label>
                                                 <input type="text" class="form-control" v-model="tradeDetails.coin" disabled>
                                             </div>
-                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.coin != 'Perfect Money'">
-                                                <label class="me-sm-2">Coin Address</label>
-                                                <input type="text" class="form-control" v-model="tradeDetails.coin_address" disabled/>
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'SELL'">
+                                                <div class="mb-3 col-xl-6" v-if="tradeDetails.coin != 'Perfect Money'">
+                                                    <label class="me-sm-2">Wallet Used</label>
+                                                    <input type="text" class="form-control" v-model="tradeDetails.coin_address" disabled/>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 col-xl-6" v-if="tradeDetails.trade_type == 'BUY'">
+                                                <div class="mb-3 col-xl-6" v-if="tradeDetails.coin != 'Perfect Money'">
+                                                    <label class="me-sm-2">Fund Wallet</label>
+                                                    <input type="text" class="form-control" v-model="tradeDetails.coin_address" disabled/>
+                                                </div>
                                             </div>
                                              <div class="mb-3 col-xl-6"  v-if="tradeDetails.coin === 'Perfect Money'">
                                                 <label class="me-sm-2" >PM Account</label>

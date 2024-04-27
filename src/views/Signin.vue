@@ -55,13 +55,13 @@ export default defineComponent({
     setup() {
         const password = ref<string>('')
         const email = ref<string>('')
-        let loading = ref<any>(false)
+        let loading = ref<boolean>(false)
         // let isAuthenticated =  ref<any>(true)
         let isAuthenticated:boolean = true;
         const router = useRouter()
        
         const callApi = async () => {
-            loading = true
+            // loading = true
              const formData = {email: email.value, password:password.value}
             
              try{
