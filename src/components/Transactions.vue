@@ -9,7 +9,7 @@
                         <td>STATUS</td>
                         <td> TYPE</td>
                         <td>ASSET</td>
-                        <td>COIN</td>
+                        <td>USD</td>
                         <td> AMOUNT ENTERED(₦)</td>
                         <td> AMOUNT PAID(₦)</td>
                         <td>DATE</td>
@@ -35,7 +35,7 @@
                         <td>
                             <i class="cc BTC me-3" v-if="transaction.coin.coin_name == 'Bitcoin'"></i><img src="../../public/assets/images/perfect-money-logo.png" width="20" v-if="transaction.coin.coin_name === 'Perfect Money'"/><i class="cc ETH" me-3 style="color:#5968ba" v-if="transaction.coin.coin_name == 'Ethereum'"></i><i class="cc LTC me-3"  v-if="transaction.coin.coin_name == 'Litecoin'"></i><i class="cc DOGE me-3"  v-if="transaction.coin.coin_name == 'DOGE'"></i><i class="cc USDT me-3" v-if="transaction.coin.coin_name == 'USDT' "></i><i class="cc XRP me-3" v-if="transaction.coin.coin_name == 'Ripple'"></i> <img :src=transaction.coin.image width="30" class="rounded-circle" v-else/>{{transaction.coin.coin_name}}
                         </td>
-                        <td>{{transaction.coin_amount}}</td>
+                        <td>${{transaction.dollar_amount}}</td>
                         <td>₦{{transaction.naira_amount}}</td>
                         <td>₦{{transaction.paid_naira_amount}}</td>
                         <td> {{transaction.date}}</td>
@@ -48,9 +48,7 @@
                         <td>
                             <router-link :to="{name:'UpdateTrade', params:{reference:transaction.transaction_reference}}"><span><i class="la la-pen-alt"></i>Edit</span> </router-link>
                         </td>
-
                     </tr>
-            
                 </tbody>
             </table>
         </div>

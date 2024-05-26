@@ -20,7 +20,10 @@
                                     </div>
                                     <div class="mb-3">
                                         <label>Password</label>
-                                        <input type="password" class="form-control" placeholder="Password" v-model="password"/>
+                                        <div class="input-group">
+                                            <input :type="passwordToggle ? 'text' : 'password'"  class="form-control" placeholder="Password" v-model="password" />
+                                            <span class="input-group-text" @click="passwordToggleHandler" :style="{cursor:'pointer'}">{{passwordToggle ? 'Hide' : "Show"}}</span>
+                                        </div>
                                     </div>
                                     <div class="row d-flex justify-content-between mt-4 mb-2">
                                         <div class="mb-3 mb-0">
@@ -55,13 +58,13 @@ export default defineComponent({
     setup() {
         const password = ref<string>('')
         const email = ref<string>('')
+        const passwordToggle = ref<boolean>(false)
         let loading = ref<boolean>(false)
         // let isAuthenticated =  ref<any>(true)
         let isAuthenticated:boolean = true;
         const router = useRouter()
        
         const callApi = async () => {
-            // loading = true
              const formData = {email: email.value, password:password.value}
             
              try{
@@ -70,8 +73,6 @@ export default defineComponent({
                         const access = res.data.access
                         sessionStorage.setItem('access', access)
                         sessionStorage.setItem('isAuthenticated', 'true')
-                        console.log(email.value);
-                        
                         sessionStorage.setItem('email', email.value)
                         router.push("/")
                     })
@@ -84,14 +85,13 @@ export default defineComponent({
                     }
                 }
             }
-        return {callApi, loading, password, email}
+
+            const passwordToggleHandler = () => {
+                passwordToggle.value = !passwordToggle.value
+            }
+        return {callApi, loading, password, email, passwordToggle, passwordToggleHandler}
     },
 })
 </script>
 
-<style>
-.VuePassword__Toggle{
-    padding-left: 9rem !important;
-}
-</style>
 

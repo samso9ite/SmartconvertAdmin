@@ -18,6 +18,7 @@
                                         <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
                                     </h5>
                                 </div>
+                                <h3 class="mt-3" style="color: red;" v-if="tradeDetails.updating"> A Staff is attending to this trade</h3>
                                 <div class="card-body">
                                     <form @submit.prevent="updateTransaction">
                                         <div class="row">
@@ -130,7 +131,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref,onMounted } from 'vue'
+import { defineComponent,ref,onMounted, onBeforeUnmount } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import { useRoute , useRouter } from 'vue-router'
@@ -164,9 +165,10 @@ export default defineComponent({
             editable: false as boolean,
             pm_account: '' as string,
             campaign_bonus: false as boolean,
-            bonus_bank: {}
+            bonus_bank: {},
+            updating: false as boolean
         })
-
+        const reference = ref<any>("")
         const bankDetails = ref({
             bank_name: '' as string,
             account_number: '' as string,
@@ -179,10 +181,10 @@ export default defineComponent({
         })
         
         const setTradeValues = () => {
-            const reference = route.params.reference
+            // const reference = route.params.reference
             const transactions = ref<any>(store.state.all_transactions)
             
-            const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference)
+            const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference.value)
             
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
@@ -201,6 +203,7 @@ export default defineComponent({
             tradeDetails.value.pm_account = selected[0].pm_account
             tradeDetails.value.editable = selected[0].editable
             tradeDetails.value.campaign_bonus = selected[0].campaign_bonus
+            tradeDetails.value.updating = selected[0].updating
             bonusBankDetails.value.bank_name = selected[0].bonus_bank.bank_name
             bonusBankDetails.value.account_number = selected[0].bonus_bank.account_number
             bonusBankDetails.value.account_name = selected[0].bonus_bank.account_name
@@ -217,10 +220,9 @@ export default defineComponent({
 
         /* Update Trade Details */
         const updateTransaction = async () => {
-            if(tradeDetails.value.transaction_status == 2 || tradeDetails.value.transaction_status == 4 || tradeDetails.value.transaction_status == 7){
+            if(tradeDetails.value.transaction_status == 2 || tradeDetails.value.transaction_status == 4 
+                || tradeDetails.value.transaction_status == 7){
                 tradeDetails.value.editable = true 
-                console.log(tradeDetails.value.editable);
-                
             }else{
                 tradeDetails.value.editable = false
             }
@@ -253,7 +255,6 @@ export default defineComponent({
                     
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, sellFormData)
                     .then(res => {
-                        console.log(res);
                         Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
                         router.push({path:'/'})
                         alert('Transaction Updated Successfully')
@@ -276,8 +277,19 @@ export default defineComponent({
             } 
         }
 
+        const disableEdit = async (val:boolean) => {
+            setTimeout(() => {
+                Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+reference.value, {updating:val})
+            }, 3000)
+           
+            
+        }
+        onBeforeUnmount(() => {disableEdit(false)})
+
         onMounted(() => {
+            reference.value = route.params.reference
             setTradeValues()
+            disableEdit(true)
         })
 
         return {setTradeValues, tradeDetails, updateTransaction, bankDetails, bonusBankDetails}

@@ -14,7 +14,7 @@
                                     <h4 class="card-title">Coin Rate</h4>
                                 </div>
                                 <div class="card-body">
-                                    <form @submit.prevent="updateCoin">
+                                    <form>
                                         <div class="row">
                                             <div class="mb-3 col-xl-6">
                                                 <label class="me-sm-2">Coin Name</label>
@@ -79,7 +79,15 @@
                                            </span>
                                               
                                             <span v-else>
-                                                <div class="mb-3 col-xl-6">
+                                                <div class="mb-3 col-xl-12">
+                                                    <label class="me-sm-2">All Address</label>
+                                                    <input type="text" class="form-control" v-model="coin.all_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                    <!-- <div class="col-12"> -->
+                                                        <button class="btn btn-success waves-effect mt-3" type="submit" @click="updateCoin">Update Coin Address</button>
+                                                    <!-- </div> -->
+                                                    <!-- <input type="text" class="form-control" v-model="coin.second_address" disabled v-else> -->
+                                                </div>
+                                                <div class="mb-3 col-xl-6" style="margin-top: 5em;">
                                                 <label class="me-sm-2">First Address</label>
                                                 <input type="text" class="form-control" v-model="coin.first_address"  v-if="adminEmail === 'info@smartconvert.ng'">
                                                 <input type="text" class="form-control" v-model="coin.first_address"  v-else disabled>
@@ -106,7 +114,7 @@
                                                 </div>
                                             </span>
                                             <div class="col-12">
-                                                <button class="btn btn-success waves-effect" type="submit">Save</button>
+                                                <button class="btn btn-success waves-effect" type="submit" @click="updateCoin">Save</button>
                                             </div>
                                         </div>
                                     </form>
@@ -166,6 +174,7 @@ export default defineComponent({
             fourth_address: '' as string,
             fifth_address: '' as string,
             has_networks: false as boolean,
+            all_address: "" as string
         })
         const network = ref({
             coin_id: 0 as number,
@@ -199,7 +208,25 @@ export default defineComponent({
             coin.value.has_networks = selectedCoin[0].has_networks
            
         }
-        const updateCoin = async () => {
+        const updateCoin = async (e:any) => {
+            e.preventDefault()
+            if (coin.value.all_address !== "null"){
+                let items:string[] = [];
+                coin.value.all_address.split(",").map((item:string) => {
+                    items.push(item.trim())
+                    if(items.length == 1){
+                       coin.value.first_address = items[0] 
+                    }else if(items.length == 2){
+                        coin.value.second_address = items[1]
+                    }else if(items.length == 3){
+                        coin.value.third_address = items[2]
+                    }else if(items.length == 4){
+                        coin.value.fourth_address = items[3]
+                    }else if(items.length == 5){
+                        coin.value.fifth_address = items[4]
+                    }
+                })
+            }
             const formData = {
                 coin_name: coin.value.coin_name,
                 coin_description: coin.value.coin_description,

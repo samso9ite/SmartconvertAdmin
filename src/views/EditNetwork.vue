@@ -14,7 +14,7 @@
                                         <h4 class="card-title">Edit {{ networkName }} Network</h4>
                                     </div>
                                     <div class="card-body">
-                                          <form @submit.prevent="editNetwork">
+                                          <form >
                                             <div class="row">
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">Coin</label>
@@ -24,6 +24,15 @@
                                                     <label class="me-sm-2">Network Name</label>
                                                     <input type="text" class="form-control" v-model="network.network_name">
                                                 </div>
+
+                                                <div class="mb-3 col-xl-12 mt-5" >
+                                                    <label class="me-sm-2">All Network Address</label>
+                                                    <input type="text" class="form-control" v-model="network.all_network">
+                                                </div>
+                                                <div class="col-12 mb-5" style="padding-bottom: 30px;">
+                                                    <button class="btn btn-success waves-effect" type="submit" @click="editNetwork">Update Coin Network</button>
+                                                </div>
+
                                                 <div class="mb-3 col-xl-6">
                                                     <label class="me-sm-2">First Address</label>
                                                     <input type="text" class="form-control" v-model="network.first_address">
@@ -37,7 +46,7 @@
                                                     <input type="text" class="form-control" v-model="network.third_address">
                                                 </div>
                                                 <div class="col-12">
-                                                    <button class="btn btn-success waves-effect" type="submit">Save</button>
+                                                    <button class="btn btn-success waves-effect" type="submit" @click="editNetwork">Save</button>
                                                 </div>
                                             </div>
                                           </form>
@@ -79,10 +88,25 @@ export default defineComponent({
             first_address: '' as string,
             second_address: '' as string,
             third_address: '' as string,
+            all_network:'' as string,
         })
         const allCoin = ref<any>(store.state.all_coin)
 
-        const editNetwork = () => {
+        const editNetwork = (e:any) => {
+            e.preventDefault()
+            if(network.value.all_network !== ""){
+                let items:string[] = []
+                network.value.all_network.split(',').map((item:any) => {
+                    items.push(item.trim())
+                    if(items.length == 1){
+                        network.value.first_address = items[0]
+                    }else if(items.length == 2){
+                        network.value.second_address = items[1]
+                    }else if(items.length == 3){
+                        network.value.third_address = items[2]
+                    }
+                })
+            }
             const formData = {
                 network_name: network.value.network_name,
                 first_address: network.value.first_address,
