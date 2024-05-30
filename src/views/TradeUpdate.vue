@@ -11,8 +11,7 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade </h4><br>
-                                    
+                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade  <span style="margin-left: 12em;" v-if="expiration_wallet">Time Left : <span style="color:red">{{ expiration_time }}</span> </span> </h4><br>
                                     <h5> 
                                         <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span>
                                         <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
@@ -169,6 +168,9 @@ export default defineComponent({
             updating: false as boolean
         })
         const reference = ref<any>("")
+        const expiration_time = ref<any>('')
+        const expiration_wallet = ref<boolean>(false)
+        const timerActive = ref<boolean>(false)
         const bankDetails = ref({
             bank_name: '' as string,
             account_number: '' as string,
@@ -181,10 +183,10 @@ export default defineComponent({
         })
         
         const setTradeValues = () => {
-            // const reference = route.params.reference
             const transactions = ref<any>(store.state.all_transactions)
-            
             const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference.value)
+            console.log(selected);
+            
             
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
@@ -207,6 +209,9 @@ export default defineComponent({
             bonusBankDetails.value.bank_name = selected[0].bonus_bank.bank_name
             bonusBankDetails.value.account_number = selected[0].bonus_bank.account_number
             bonusBankDetails.value.account_name = selected[0].bonus_bank.account_name
+
+            expiration_time.value = selected[0].expiration_time
+            expiration_wallet.value = selected[0].expiration_wallet
             
             if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money"){
                 bankDetails.value.bank_name = selected[0].bank.bank_name
@@ -284,15 +289,33 @@ export default defineComponent({
            
             
         }
-        onBeforeUnmount(() => {disableEdit(false)})
 
+        const updateTime = () => {
+            let currentTime = new Date();
+            if (currentTime >= expiration_time.value) {
+                // isExpired.value = true;
+                console.log("expired");
+                
+                // stopTimer();
+            }else{
+                startTimer()
+            }
+            };
+
+        const startTimer = () => {
+            if (timerActive.value) return;
+            timerActive.value = true;
+            setInterval(updateTime, 1000);
+        };
+
+        onBeforeUnmount(() => {disableEdit(false)})
         onMounted(() => {
             reference.value = route.params.reference
             setTradeValues()
             disableEdit(true)
         })
 
-        return {setTradeValues, tradeDetails, updateTransaction, bankDetails, bonusBankDetails}
+        return {setTradeValues, tradeDetails, updateTransaction, bankDetails, bonusBankDetails, expiration_time, expiration_wallet}
       },
 })
 </script>
