@@ -170,7 +170,7 @@ export default defineComponent({
         const reference = ref<any>("")
         const expiration_time = ref<any>('')
         const expiration_wallet = ref<boolean>(false)
-        const timerActive = ref<boolean>(false)
+        const timerActive = ref<boolean>(true)
         const bankDetails = ref({
             bank_name: '' as string,
             account_number: '' as string,
@@ -213,7 +213,7 @@ export default defineComponent({
             expiration_time.value = selected[0].expiration_time
             expiration_wallet.value = selected[0].expiration_wallet
             
-            if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money"){
+            if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money") {
                 bankDetails.value.bank_name = selected[0].bank.bank_name
                 bankDetails.value.account_name = selected[0].bank.account_name
                 bankDetails.value.account_number = selected[0].bank.account_number
@@ -266,7 +266,6 @@ export default defineComponent({
                     })
                     .catch(error => {
                         console.log(error);
-                        
                     })
                 } else {
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, buyFormData)
@@ -292,18 +291,44 @@ export default defineComponent({
 
         const updateTime = () => {
             let currentTime = new Date();
-            if (currentTime >= expiration_time.value) {
-                // isExpired.value = true;
-                console.log("expired");
-                
-                // stopTimer();
-            }else{
-                startTimer()
+            // let hours = currentTime.getHours().toString().padStart(2, '0');
+            // let minutes = currentTime.getMinutes().toString().padStart(2, '0');
+            // let seconds = currentTime.getSeconds().toString().padStart(2, '0');
+            // console.log(hours+":"+minutes+":"+seconds);
+            
+            if (currentTime.toTimeString >= expiration_time.value) {
+                expiration_time.value = "Expired"
+                timerActive.value = false
+                Api.axios_instance.get(Api.baseUrl+"api/v1/send_expiry_mail/"+reference.value)
+                .then((res) => {
+                    alert("Customer has been requested to send a new wallet address via mail ")
+                })
+            }else if(!timerActive.value || timerActive !== undefined){
+               startTimer()
             }
-            };
+        };
 
+        const updateBtcTrade = () => {
+            Api.axios_instance.get("https://blockchain.info/address/"+tradeDetails.value.coin_address+"?format=json")
+            .then(res => {
+                console.log(res);
+                tradeDetails.value.amount_received = res.data.total_received
+                tradeDetails.value.hash_key = res.data.hash_key
+                let data = {
+                    amount_received: tradeDetails.value.amount_received,
+                    hash_key: tradeDetails.value.hash_key
+                }
+                Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, data)
+                    .then(res => {
+                        console.log(res);
+                    })
+            })
+        } 
+        
+       
         const startTimer = () => {
-            if (timerActive.value) return;
+            if(!expiration_wallet.value || tradeDetails.value.transaction_status !== 1) return;
+            if(!timerActive.value || timerActive.value !== undefined) return;
             timerActive.value = true;
             setInterval(updateTime, 1000);
         };
@@ -311,11 +336,14 @@ export default defineComponent({
         onBeforeUnmount(() => {disableEdit(false)})
         onMounted(() => {
             reference.value = route.params.reference
+            updateBtcTrade()
             setTradeValues()
             disableEdit(true)
+            startTimer()
         })
 
-        return {setTradeValues, tradeDetails, updateTransaction, bankDetails, bonusBankDetails, expiration_time, expiration_wallet}
+        return {setTradeValues, tradeDetails, updateTransaction, bankDetails,
+            bonusBankDetails, expiration_time, expiration_wallet}
       },
 })
 </script>
