@@ -8,10 +8,10 @@
                 <div class="col-xl-10 col-md-12">
                     <div class="row">
                         
-                        <div class="col-xl-12">
+                        <div class="col-xl-12"> 
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade  <span style="margin-left: 12em;" v-if="expiration_wallet">Time Left : <span style="color:red">{{ expiration_time }}</span> </span> </h4><br>
+                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade  <span style="margin-left: 12em;" v-if="expiration_wallet">Expiration Time : <span style="color:red">{{ expiration_time }}</span> </span> </h4><br>
                                     <h5> 
                                         <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span>
                                         <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
@@ -336,10 +336,10 @@ export default defineComponent({
         onBeforeUnmount(() => {disableEdit(false)})
         onMounted(() => {
             reference.value = route.params.reference
-            updateBtcTrade()
             setTradeValues()
             disableEdit(true)
             startTimer()
+            updateBtcTrade()
         })
 
         return {setTradeValues, tradeDetails, updateTransaction, bankDetails,

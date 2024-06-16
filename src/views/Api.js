@@ -24,14 +24,14 @@ axios_instance.interceptors.response.use(undefined, function (error) {
     if (error.response.status === 401 && !originalRequest._retry) {
         localStorage.clear();
         sessionStorage.clear();
-        // return window.location.href="https://admin.smartconvert.ng/#/sign-in";
-        return window.location.href="http://localhost:8080/?#/sign-in";
+        return window.location.href="https://admin.smartconvert.ng/#/sign-in";
+        // return window.location.href="http://localhost:8080/?#/sign-in";
     }
   }
 })
 
-// const baseUrl = 'https://api.smartconvert.ng/'
-const baseUrl = 'http://127.0.0.1:8000/'
+const baseUrl = 'https://api.smartconvert.ng/'
+// const baseUrl = 'http://127.0.0.1:8000/'
 export default { 
   axios_instance,
   baseUrl,
