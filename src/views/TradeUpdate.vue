@@ -11,7 +11,10 @@
                         <div class="col-xl-12"> 
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade  <span style="margin-left: 12em;" v-if="expiration_wallet">Expiration Time : <span style="color:red">{{ expiration_time }}</span> </span> </h4><br>
+                                    <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade  
+                                        <span style="margin-left: 12em;" v-if="expiration_wallet">Time Left : 
+                                            <span style="color:red">{{ formattedTime }}</span> </span> 
+                                        </h4><br>
                                     <h5> 
                                         <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span>
                                         <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
@@ -130,18 +133,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref,onMounted, onBeforeUnmount } from 'vue'
+import { defineComponent,ref,onMounted, onBeforeUnmount, computed } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import { useRoute , useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import Api from '../views/Api'
+import axios from 'axios'
 
 export default defineComponent({
     name: "TradeUpdate",
     components: {Footer, NavBar},
     setup() {
         const route = useRoute()
+        console.log(route);
+        
         const store = useStore()
         const router = useRouter()
         const tradeDetails = ref({
@@ -170,7 +176,7 @@ export default defineComponent({
         const reference = ref<any>("")
         const expiration_time = ref<any>('')
         const expiration_wallet = ref<boolean>(false)
-        const timerActive = ref<boolean>(true)
+       let transaction_time = ref<any>()
         const bankDetails = ref({
             bank_name: '' as string,
             account_number: '' as string,
@@ -181,13 +187,13 @@ export default defineComponent({
             account_number: '' as string,
             account_name: '' as string
         })
+       let timeRemaining = ref<number>(0) // in seconds
+        let intervalId = ref<any>(null)
         
         const setTradeValues = () => {
             const transactions = ref<any>(store.state.all_transactions)
             const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference.value)
-            console.log(selected);
-            
-            
+           
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
 
@@ -209,9 +215,10 @@ export default defineComponent({
             bonusBankDetails.value.bank_name = selected[0].bonus_bank.bank_name
             bonusBankDetails.value.account_number = selected[0].bonus_bank.account_number
             bonusBankDetails.value.account_name = selected[0].bonus_bank.account_name
-
+            
             expiration_time.value = selected[0].expiration_time
             expiration_wallet.value = selected[0].expiration_wallet
+            transaction_time.value = selected[0].transaction_time
             
             if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money") {
                 bankDetails.value.bank_name = selected[0].bank.bank_name
@@ -257,7 +264,6 @@ export default defineComponent({
              
             try {
                 if(tradeDetails.value.trade_type == 'SELL'){
-                    
                     await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, sellFormData)
                     .then(res => {
                         Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
@@ -285,65 +291,82 @@ export default defineComponent({
             setTimeout(() => {
                 Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+reference.value, {updating:val})
             }, 3000)
-           
-            
         }
 
-        const updateTime = () => {
-            let currentTime = new Date();
-            // let hours = currentTime.getHours().toString().padStart(2, '0');
-            // let minutes = currentTime.getMinutes().toString().padStart(2, '0');
-            // let seconds = currentTime.getSeconds().toString().padStart(2, '0');
-            // console.log(hours+":"+minutes+":"+seconds);
-            
-            if (currentTime.toTimeString >= expiration_time.value) {
-                expiration_time.value = "Expired"
-                timerActive.value = false
-                Api.axios_instance.get(Api.baseUrl+"api/v1/send_expiry_mail/"+reference.value)
-                .then((res) => {
-                    alert("Customer has been requested to send a new wallet address via mail ")
-                })
-            }else if(!timerActive.value || timerActive !== undefined){
-               startTimer()
-            }
-        };
-
         const updateBtcTrade = () => {
-            Api.axios_instance.get("https://blockchain.info/address/"+tradeDetails.value.coin_address+"?format=json")
+            axios.get("https://blockchain.info/address/"+tradeDetails.value.coin_address+"?format=json")
             .then(res => {
-                console.log(res);
-                tradeDetails.value.amount_received = res.data.total_received
-                tradeDetails.value.hash_key = res.data.hash_key
+                tradeDetails.value.hash_key = res.data.txs[0].hash
+                let btc_convert_rate = tradeDetails.value.dollar_amount / tradeDetails.value.coin_amount
+                let naira_rate = tradeDetails.value.naira_amount / tradeDetails.value.dollar_amount
+                let satoshi_btc = res.data.total_received / 100000000
+                let satoshi_usd = satoshi_btc * btc_convert_rate
+                let converted_naira_amount = satoshi_usd * naira_rate
+                tradeDetails.value.amount_received = satoshi_btc
+                tradeDetails.value.paid_dollar_amount = satoshi_usd
+                tradeDetails.value.paid_naira_amount = converted_naira_amount
+            
                 let data = {
-                    amount_received: tradeDetails.value.amount_received,
+                    paid_dollar_amount: satoshi_usd,
+                    paid_naira_amount: converted_naira_amount,
+                    amount_received: satoshi_btc,
                     hash_key: tradeDetails.value.hash_key
                 }
                 Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, data)
-                    .then(res => {
-                        console.log(res);
-                    })
             })
         } 
         
-       
-        const startTimer = () => {
-            if(!expiration_wallet.value || tradeDetails.value.transaction_status !== 1) return;
-            if(!timerActive.value || timerActive.value !== undefined) return;
-            timerActive.value = true;
-            setInterval(updateTime, 1000);
-        };
+
+        const formattedTime = computed(() => {
+        const minutes = Math.floor(timeRemaining.value / 60);
+        const seconds = Math.floor(timeRemaining.value % 60);
+
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    });
+
+const startCountdown = () => {
+    if (!expiration_wallet.value && tradeDetails.value.transaction_status !== 1) return;
+
+    const transactionTime = new Date(transaction_time.value).getTime() / 1000; // Convert ISO string to Unix timestamp in seconds
+    const countdownDuration = expiration_time.value * 60; // Convert expiration_time to seconds
+
+    timeRemaining.value = countdownDuration - (Date.now() / 1000 - transactionTime); // Calculate remaining time
+
+    // Clear any existing intervals
+    if (intervalId) {
+        clearInterval(intervalId.value);
+    }
+
+    // Start a new interval
+    intervalId.value = setInterval(() => {
+        if (timeRemaining.value > 0) {
+            timeRemaining.value = parseFloat((timeRemaining.value - 0.1).toFixed(1)); // decrement by 0.1 seconds for more granular control
+        } else {
+            // Perform actions when countdown reaches zero
+            Api.axios_instance.get(Api.baseUrl + "api/v1/send_expiry_mail/" + reference.value)
+                .then((res) => {
+                    alert("Customer has been requested to send a new wallet address via mail ")
+                })
+            clearInterval(intervalId.value);
+        }
+    }, 100); // Adjust interval time for smoother countdown (100 ms)
+};
 
         onBeforeUnmount(() => {disableEdit(false)})
         onMounted(() => {
             reference.value = route.params.reference
             setTradeValues()
             disableEdit(true)
-            startTimer()
+            if (expiration_time.value !== undefined) {
+                timeRemaining.value = parseFloat(expiration_time.value.toFixed(1));
+                startCountdown()
+            }
+            
             updateBtcTrade()
         })
 
         return {setTradeValues, tradeDetails, updateTransaction, bankDetails,
-            bonusBankDetails, expiration_time, expiration_wallet}
+            bonusBankDetails, expiration_time, expiration_wallet, startCountdown,formattedTime }
       },
 })
 </script>
