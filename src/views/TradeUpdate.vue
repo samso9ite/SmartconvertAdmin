@@ -193,7 +193,7 @@ export default defineComponent({
         const setTradeValues = () => {
             const transactions = ref<any>(store.state.all_transactions)
             const selected = transactions.value.filter((transaction:any) => transaction.transaction_reference == reference.value)
-           
+            
             tradeDetails.value.coin = selected[0].coin.coin_name
             tradeDetails.value.coin_address = selected[0].coin_address
 
@@ -218,7 +218,7 @@ export default defineComponent({
             
             expiration_time.value = selected[0].expiration_time
             expiration_wallet.value = selected[0].expiration_wallet
-            transaction_time.value = selected[0].transaction_time
+            transaction_time.value = selected[0].date
             
             if (tradeDetails.value.trade_type == 'SELL' && tradeDetails.value.coin != "Perfect Money") {
                 bankDetails.value.bank_name = selected[0].bank.bank_name
@@ -317,19 +317,18 @@ export default defineComponent({
         } 
         
 
-        const formattedTime = computed(() => {
-        const minutes = Math.floor(timeRemaining.value / 60);
-        const seconds = Math.floor(timeRemaining.value % 60);
+const formattedTime = computed(() => {
+    const minutes = Math.floor(timeRemaining.value / 60);
+    const seconds = Math.floor(timeRemaining.value % 60);
 
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    });
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+});
 
 const startCountdown = () => {
     if (!expiration_wallet.value && tradeDetails.value.transaction_status !== 1) return;
 
     const transactionTime = new Date(transaction_time.value).getTime() / 1000; // Convert ISO string to Unix timestamp in seconds
     const countdownDuration = expiration_time.value * 60; // Convert expiration_time to seconds
-
     timeRemaining.value = countdownDuration - (Date.now() / 1000 - transactionTime); // Calculate remaining time
 
     // Clear any existing intervals
