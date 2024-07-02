@@ -15,16 +15,16 @@
                                 <ul class="list-unstyled">
                                     <div class="row">
                                         <div class="col-lg-4" v-for="rate in rates" :key="rate.unique_id">
-                                            
                                                 <li class="d-flex" >
                                                     <i class="cc BTC" v-if="rate.coin_name === 'Bitcoin'"></i> <i class="cc TX" v-if="rate.coin_name === 'TRON'"></i> <img src="../../public/assets/images/perfect-money-logo.png" width="38px" v-if="rate.coin_name === 'Perfect Money'"/><i class="cc ETH"  v-if="rate.coin_name == 'Ethereum'"></i><i class="cc LTC"  v-if="rate.coin_name == 'LiteCoin'"></i><i class="cc DOGE"  v-if="rate.coin_name == 'Doge Coin'">
                                                     </i><i class="cc USDT-alt" v-if="rate.coin_name == 'USDT' "></i><i class="cc XRP-alt" v-if="rate.coin_name == 'Ripple'"></i>
-                                                    <img :src=rate.image width="40" class="rounded-circle" v-else/>
+                                                    <img :src=rate.image width="40" class="rounded-circle " v-else/>
                                                     <div class="flex-grow-1">
                                                         <router-link :to="{name:'EditRate', params:{reference:rate.unique_id}}"> <h5 class="m-0" style="margin-left:10px !important"> {{rate.coin_name}}</h5></router-link>
+                                                        <h5 class="mt-3" @click="setFeeToEdit(rate.unique_id)"  v-if="rate.unique_id !== feeId"> Fee: {{ rate.confirmation_fee }}</h5>
+                                                        <input type="text" v-model="feeEditVal" @change="updateRate(rate.unique_id, 'fee')" v-else-if="rate.unique_id == feeId"/>
                                                     </div>
                                                     <div class="text-end">
-                                                      
                                                         <h5 @click="setBuyToEdit(rate.unique_id, rate.buy_rate, rate.sell_rate)" v-if="buyCoinToEdit !== rate.unique_id">₦{{rate.buy_rate}} BUY</h5>
                                                         <span  v-else-if="buyCoinToEdit == rate.unique_id"><input type="text" @change="updateRate(rate.unique_id, 'buy')" v-model="rateEditVal.buy_rate"/><br /></span>
                                                         <span @click="setSellToEdit(rate.unique_id, rate.buy_rate, rate.sell_rate)" v-if="sellCoinToEdit !== rate.unique_id">₦{{rate.sell_rate}} SELL</span>
@@ -68,6 +68,8 @@ export default defineComponent({
         const rates = ref<Coin[]>([])
         const buyCoinToEdit = ref<string>("")
         const sellCoinToEdit = ref<string>("")
+        const feeId = ref<string>('')
+        const feeEditVal = ref<any>('')
         const rateEditVal = ref<any>({
             buy_rate: '' as string,
             sell_rate: '' as string
@@ -98,6 +100,11 @@ export default defineComponent({
         rateEditVal.value.buy_rate = buy_rate;
         rateEditVal.value.sell_rate = sell_rate
     };
+
+    const setFeeToEdit = (id:string) => {
+        console.log(id);
+        feeId.value = id
+    }
       
     const setSellToEdit = (id:string, buy_rate:number, sell_rate:number) => {
         sellCoinToEdit.value = id
@@ -106,18 +113,34 @@ export default defineComponent({
     }
 
     const updateRate = async (id:string, type:string) => {
-        const formData = {
-           buy_rate: rateEditVal.value.buy_rate,
-           sell_rate:rateEditVal.value.sell_rate
+        let formData;
+        if (type == 'sell' || type == "buy"){
+         formData = {
+                buy_rate: rateEditVal.value.buy_rate,
+                sell_rate:rateEditVal.value.sell_rate
+            }
+        }else if(type="fee"){
+            // console.log(feeEditVal);
+            
+            let fee = feeEditVal.value.toString()
+            console.log(fee);
+            
+            formData = {
+                confirmation_fee: fee
+            }
         }
+       
         try {
                 await Api.axios_instance.patch(Api.baseUrl+('api/v1/update-coin/'+id), formData)
                 .then(res => {
                     router.push({path:'/rates'})
                     if(type == "buy"){
                         buyCoinToEdit.value = ""
-                    }else{
+                    }else if(type == 'sell'){
                         sellCoinToEdit.value = ""
+                    }else{
+                        feeEditVal.value = ""
+                        feeId.value = ""
                     }
                     getCoins()
                 })
@@ -130,7 +153,8 @@ export default defineComponent({
         getAdminEmail()
     })
 
-    return {getCoins, rates, adminEmail, sellCoinToEdit, buyCoinToEdit, rateEditVal, setBuyToEdit, setSellToEdit, updateRate }
+    return {getCoins, rates, adminEmail, sellCoinToEdit, buyCoinToEdit, feeEditVal,
+         rateEditVal, feeId,  setBuyToEdit, setSellToEdit, updateRate, setFeeToEdit }
     },
 
 })

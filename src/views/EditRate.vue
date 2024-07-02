@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row">
                 
-                <div class="col-xl-9 col-md-8">
+                <div class="col-xl-12 col-md-12">
                     <div class="row">
                         
                         <div class="col-xl-12">
@@ -16,37 +16,42 @@
                                 <div class="card-body">
                                     <form>
                                         <div class="row">
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Coin Name</label>
                                                 <input type="text" class="form-control" v-model="coin.coin_name">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Buy Rate</label>
                                                 <input type="text" class="form-control"
                                                    v-model="coin.buy_rate">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Sell Rate</label>
                                                 <input type="text" class="form-control"
                                                    v-model="coin.sell_rate">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
+                                                <label class="me-sm-2">Confirmation Fee</label>
+                                                <input type="text" class="form-control"
+                                                   v-model="coin.confirmation_fee">
+                                            </div>
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Coin Shortcode</label>
                                                 <input type="text" class="form-control" v-model="coin.coin_short_code">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Minimum Buy Limit</label>
                                                 <input type="text" class="form-control" v-model="coin.minimum_buy_limit">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Minimum Sell Limit</label>
                                                 <input type="text" class="form-control" v-model="coin.minimum_sell_limit">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Maximum Buy Limit</label>
                                                 <input type="text" class="form-control" v-model="coin.maximum_buy_limit">
                                             </div>
-                                            <div class="mb-3 col-xl-6">
+                                            <div class="mb-3 col-xl-4">
                                                 <label class="me-sm-2">Maximum Sell Limit</label>
                                                 <input type="text" class="form-control" v-model="coin.maximum_sell_limit">
                                             </div>
@@ -79,7 +84,40 @@
                                            </span>
                                               
                                             <span v-else>
-                                                <div class="mb-3 col-xl-12">
+                                                <div class="row ">
+                                                   <div class="mb-3 col-xl-4" >
+                                                    <label class="me-sm-2">First Address</label>
+                                                    <input type="text" class="form-control" v-model="coin.first_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                    <input type="text" class="form-control" v-model="coin.first_address"  v-else disabled>
+                                                    </div>
+                                                    <div class="mb-3 col-xl-4">
+                                                        <label class="me-sm-2">Second Address</label>
+                                                        <input type="text" class="form-control" v-model="coin.second_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                        <input type="text" class="form-control" v-model="coin.second_address" disabled v-else>
+                                                    </div>
+                                                    <div class="mb-3 col-xl-4">
+                                                        <label class="me-sm-2">Third Address</label>
+                                                        <input type="text" class="form-control" v-model="coin.third_address" v-if="adminEmail === 'info@smartconvert.ng'">
+                                                        <input type="text" class="form-control" v-model="coin.third_address" disabled v-else >
+                                                    </div>
+                                                    <div class="mb-3 col-xl-4">
+                                                        <label class="me-sm-2">Fourth Address</label>
+                                                        <input type="text" class="form-control" v-model="coin.fourth_address"  v-if="adminEmail === 'info@smartconvert.ng'">
+                                                        <input type="text" class="form-control" v-model="coin.fourth_address" disabled v-else>
+                                                    </div>
+                                                    <div class="mb-3 col-xl-4">
+                                                        <label class="me-sm-2">Fifth Address</label>
+                                                        <input type="text" class="form-control" v-model="coin.fifth_address" v-if="adminEmail === 'info@smartconvert.ng'">
+                                                        <input type="text" class="form-control" v-model="coin.fifth_address" disabled v-else>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <button class="btn btn-success waves-effect" type="submit" @click="updateCoin">Save</button>
+                                                    </div>
+                                                    </div>
+
+
+                                                <div class="mb-3 col-xl-8 mt-5">
                                                     <label class="me-sm-2">All Address</label>
                                                     <input type="text" class="form-control" v-model="coin.all_address"  v-if="adminEmail === 'info@smartconvert.ng'">
                                                     <!-- <div class="col-12"> -->
@@ -87,35 +125,10 @@
                                                     <!-- </div> -->
                                                     <!-- <input type="text" class="form-control" v-model="coin.second_address" disabled v-else> -->
                                                 </div>
-                                                <div class="mb-3 col-xl-6" style="margin-top: 5em;">
-                                                <label class="me-sm-2">First Address</label>
-                                                <input type="text" class="form-control" v-model="coin.first_address"  v-if="adminEmail === 'info@smartconvert.ng'">
-                                                <input type="text" class="form-control" v-model="coin.first_address"  v-else disabled>
-                                                </div>
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Second Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.second_address"  v-if="adminEmail === 'info@smartconvert.ng'">
-                                                    <input type="text" class="form-control" v-model="coin.second_address" disabled v-else>
-                                                </div>
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Third Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.third_address" v-if="adminEmail === 'info@smartconvert.ng'">
-                                                    <input type="text" class="form-control" v-model="coin.third_address" disabled v-else >
-                                                </div>
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Fourth Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.fourth_address"  v-if="adminEmail === 'info@smartconvert.ng'">
-                                                    <input type="text" class="form-control" v-model="coin.fourth_address" disabled v-else>
-                                                </div>
-                                                <div class="mb-3 col-xl-6">
-                                                    <label class="me-sm-2">Fifth Address</label>
-                                                    <input type="text" class="form-control" v-model="coin.fifth_address" v-if="adminEmail === 'info@smartconvert.ng'">
-                                                    <input type="text" class="form-control" v-model="coin.fifth_address" disabled v-else>
-                                                </div>
+                                                
+
                                             </span>
-                                            <div class="col-12">
-                                                <button class="btn btn-success waves-effect" type="submit" @click="updateCoin">Save</button>
-                                            </div>
+                                         
                                         </div>
                                     </form>
                                 </div>
@@ -174,7 +187,8 @@ export default defineComponent({
             fourth_address: '' as string,
             fifth_address: '' as string,
             has_networks: false as boolean,
-            all_address: "" as string
+            all_address: "" as string,
+            confirmation_fee: '' as string
         })
         const network = ref({
             coin_id: 0 as number,
@@ -206,7 +220,7 @@ export default defineComponent({
             coin.value.fourth_address = selectedCoin[0].fourth_address
             coin.value.fifth_address = selectedCoin[0].fifth_address
             coin.value.has_networks = selectedCoin[0].has_networks
-           
+            coin.value.confirmation_fee = selectedCoin[0].confirmation_fee
         }
         const updateCoin = async (e:any) => {
             e.preventDefault()
@@ -245,7 +259,8 @@ export default defineComponent({
                 third_address: coin.value.third_address,
                 fourth_address: coin.value.fourth_address,
                 fifth_address: coin.value.fifth_address,
-                has_networks: coin.value.has_networks
+                has_networks: coin.value.has_networks,
+                confirmation_fee: coin.value.confirmation_fee
             }
             try {
                 await Api.axios_instance.patch(Api.baseUrl+('api/v1/update-coin/'+id), formData)

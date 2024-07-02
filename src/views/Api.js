@@ -30,8 +30,8 @@ axios_instance.interceptors.response.use(undefined, function (error) {
   }
 })
 
-const baseUrl = 'https://api.smartconvert.ng/'
-// const baseUrl = 'http://127.0.0.1:8000/'
+// const baseUrl = 'https://api.smartconvert.ng/'
+const baseUrl = 'http://127.0.0.1:8000/'
 export default { 
   axios_instance,
   baseUrl,

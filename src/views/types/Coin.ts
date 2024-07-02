@@ -9,6 +9,7 @@ interface Coin {
     maximum_limit:number,
     unique_id:string,
     image: any
+    confirmation_fee:number
 }
 
 export default Coin
