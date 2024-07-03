@@ -13,14 +13,16 @@
                                 <div class="card-header">
                                     <h4 class="card-title">Update {{ tradeDetails.coin }} {{ tradeDetails.trade_type }} Trade  
                                         <span style="margin-left: 12em;" v-if="expiration_wallet">Time Left : 
-                                            <span style="color:red">{{ formattedTime }}</span> </span> 
+                                            <span style="color:red" v-if="timeRemaining > 0">{{ formattedTime }}</span> 
+                                            <span style="color:red" v-else-if="timeRemaining < 0">{{ "Expired" }}</span> 
+                                        </span> 
                                         </h4><br>
                                     <h5> 
                                         <span  v-if="tradeDetails.trade_type == 'SELL' && tradeDetails.coin != 'Perfect Money'"> ({{ bankDetails.bank_name }} {{ bankDetails.account_number }}  {{ bankDetails.account_name }})</span>
                                         <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
                                     </h5>
                                 </div>
-                                <h3 class="mt-3" style="color: red;" v-if="tradeDetails.updating"> A Staff is attending to this trade</h3>
+                                <!-- <h3 class="mt-3" style="color: red;" v-if="tradeDetails.updating"> A Staff is attending to this trade</h3> -->
                                 <div class="card-body">
                                     <form @submit.prevent="updateTransaction">
                                         <div class="row">
@@ -115,7 +117,7 @@
                                             </div>
 
                                             <div v-if="tradeDetails.editable == false">
-                                                <button class="btn btn-success waves-effect">Save</button>
+                                                <button class="btn btn-success waves-effect">Save {{ tradeDetails.editable }}</button>
                                             </div>
                                         </div>
                                        
@@ -261,6 +263,10 @@ export default defineComponent({
                 hash_key_type: tradeDetails.value.hash_key_type,
                 editable: tradeDetails.value.editable
             }
+            console.log(buyFormData);
+            console.log(tradeDetails.value.trade_type);
+            
+             console.log(tradeDetails.value.transaction_status);
              
             try {
                 if(tradeDetails.value.trade_type == 'SELL'){
@@ -274,12 +280,14 @@ export default defineComponent({
                         console.log(error);
                     })
                 } else {
-                    await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, buyFormData)
-                    .then(res => {
-                        Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
-                        router.push({path:'/'})
-                        alert('Transaction Updated Successfully')
-                    })
+                        await Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, buyFormData)
+                        .then(res => {
+                            Api.axios_instance.get(Api.baseUrl+'api/v1/send_mail/'+route.params.reference)
+                            router.push({path:'/'})
+                            alert('Transaction Updated Successfully')
+                        })
+                    
+                   
                 }
               
             }catch(e){
@@ -296,28 +304,31 @@ export default defineComponent({
         const updateBtcTrade = () => {
             axios.get("https://blockchain.info/address/"+tradeDetails.value.coin_address+"?format=json")
             .then(res => {
-                tradeDetails.value.hash_key = res.data.txs[0].hash
-                let btc_convert_rate = tradeDetails.value.dollar_amount / tradeDetails.value.coin_amount
-                let naira_rate = tradeDetails.value.naira_amount / tradeDetails.value.dollar_amount
-                let satoshi_btc = res.data.total_received / 100000000
-                let satoshi_usd = satoshi_btc * btc_convert_rate
-                let converted_naira_amount = satoshi_usd * naira_rate
-                tradeDetails.value.amount_received = satoshi_btc
-                tradeDetails.value.paid_dollar_amount = satoshi_usd
-                tradeDetails.value.paid_naira_amount = converted_naira_amount
-            
-                let data = {
-                    paid_dollar_amount: satoshi_usd,
-                    paid_naira_amount: converted_naira_amount,
-                    amount_received: satoshi_btc,
-                    hash_key: tradeDetails.value.hash_key
+                if(res?.data){
+                    tradeDetails.value.hash_key = res.data.txs[0].hash
+                    let btc_convert_rate = tradeDetails.value.dollar_amount / tradeDetails.value.coin_amount
+                    let naira_rate = tradeDetails.value.naira_amount / tradeDetails.value.dollar_amount
+                    let satoshi_btc = res.data.total_received / 100000000
+                    let satoshi_usd = satoshi_btc * btc_convert_rate
+                    let converted_naira_amount = satoshi_usd * naira_rate
+                    tradeDetails.value.amount_received = satoshi_btc
+                    tradeDetails.value.paid_dollar_amount = satoshi_usd
+                    tradeDetails.value.paid_naira_amount = converted_naira_amount
+                
+                    let data = {
+                        paid_dollar_amount: satoshi_usd,
+                        paid_naira_amount: converted_naira_amount,
+                        amount_received: satoshi_btc,
+                        hash_key: tradeDetails.value.hash_key
+                    }
+                    Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, data)
                 }
-                Api.axios_instance.patch(Api.baseUrl+'api/v1/approve-dissapprove-trade/'+route.params.reference, data)
+               
             })
         } 
         
 
-const formattedTime = computed(() => {
+let formattedTime:any = computed(() => {
     const minutes = Math.floor(timeRemaining.value / 60);
     const seconds = Math.floor(timeRemaining.value % 60);
 
@@ -338,15 +349,20 @@ const startCountdown = () => {
 
     // Start a new interval
     intervalId.value = setInterval(() => {
-        if (timeRemaining.value > 0) {
-            timeRemaining.value = parseFloat((timeRemaining.value - 0.1).toFixed(1)); // decrement by 0.1 seconds for more granular control
-        } else {
-            // Perform actions when countdown reaches zero
-            Api.axios_instance.get(Api.baseUrl + "api/v1/send_expiry_mail/" + reference.value)
-                .then((res) => {
-                    alert("Customer has been requested to send a new wallet address via mail ")
-                })
-            clearInterval(intervalId.value);
+            if(tradeDetails.value.transaction_status == 1){
+            if (timeRemaining.value > 0) {
+                timeRemaining.value = parseFloat((timeRemaining.value - 0.1).toFixed(1)); // decrement by 0.1 seconds for more granular control
+            } else {
+                // Perform actions when countdown reaches zero
+                formattedTime = "Expired"
+                console.log(formattedTime);
+                
+                Api.axios_instance.get(Api.baseUrl + "api/v1/send_expiry_mail/" + reference.value)
+                    .then((res) => {
+                        alert("Customer has been requested to send a new wallet address via mail ")
+                    })
+                clearInterval(intervalId.value);
+            }
         }
     }, 100); // Adjust interval time for smoother countdown (100 ms)
 };
@@ -358,14 +374,13 @@ const startCountdown = () => {
             disableEdit(true)
             if (expiration_time.value !== undefined) {
                 timeRemaining.value = parseFloat(expiration_time.value.toFixed(1));
-                startCountdown()
+             startCountdown()
             }
-            
-            updateBtcTrade()
+           updateBtcTrade()
         })
 
         return {setTradeValues, tradeDetails, updateTransaction, bankDetails,
-            bonusBankDetails, expiration_time, expiration_wallet, startCountdown,formattedTime }
+            bonusBankDetails, expiration_time, expiration_wallet, startCountdown,formattedTime, timeRemaining }
       },
 })
 </script>
