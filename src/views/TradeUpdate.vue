@@ -22,7 +22,6 @@
                                         <span  v-if="tradeDetails.trade_type == 'BUY' && tradeDetails.campaign_bonus == true"> ({{ bonusBankDetails.bank_name }} {{ bonusBankDetails.account_number }}  {{ bonusBankDetails.account_name }})</span>
                                     </h5>
                                 </div>
-                                <!-- <h3 class="mt-3" style="color: red;" v-if="tradeDetails.updating"> A Staff is attending to this trade</h3> -->
                                 <div class="card-body">
                                     <form @submit.prevent="updateTransaction">
                                         <div class="row">
@@ -117,7 +116,7 @@
                                             </div>
 
                                             <div v-if="tradeDetails.editable == false">
-                                                <button class="btn btn-success waves-effect">Save {{ tradeDetails.editable }}</button>
+                                                <button class="btn btn-success waves-effect">Save </button>
                                             </div>
                                         </div>
                                        
@@ -148,8 +147,6 @@ export default defineComponent({
     components: {Footer, NavBar},
     setup() {
         const route = useRoute()
-        console.log(route);
-        
         const store = useStore()
         const router = useRouter()
         const tradeDetails = ref({
